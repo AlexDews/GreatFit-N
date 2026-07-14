@@ -1,0 +1,27 @@
+// app/assets/scss/style.scss
+// ~ Глобальные базовые стили
+@import "global/null";
+@import "global/base";
+
+// ~ Общие стили для каркаса приложения (App Layout)
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: $fontFamily;
+  font-size: $fontSize;
+  background-color: $colorBg;
+  color: $fontColor;
+  position: relative;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1 1 auto;
+}
+
+// ~ Вспомогательные глобальные утилиты
+.ptb {
+  @include adaptiveValue("padding-top", 96, 76);
+  @include adaptiveValue("padding-bottom", 96, 76);
+}

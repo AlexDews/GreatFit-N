@@ -1,0 +1,40 @@
+{
+  "name": "luminanexus",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "prepare": "husky",
+    "lint": "eslint . && stylelint \"app/assets/scss/**/*.scss\" \"app/**/*.vue\"",
+    "lint:fix": "eslint . --fix && stylelint \"app/assets/scss/**/*.scss\" \"app/**/*.vue\" --fix"
+  },
+  "dependencies": {
+    "gsap": "^3.15.0",
+    "imask": "^7.6.1",
+    "nouislider": "^15.8.1",
+    "nuxt": "^4.4.8",
+    "swiper": "^12.0.3",
+    "vue": "^3.5.39",
+    "vue-router": "^5.1.0"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.16.0",
+    "@nuxt/fonts": "^0.14.0",
+    "@nuxt/image": "^2.0.0",
+    "eslint": "^10.7.0",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "postcss-html": "^1.8.1",
+    "postcss-pxtorem": "^6.1.0",
+    "postcss-sort-media-queries": "^5.2.0",
+    "sass": "^1.97.1",
+    "stylelint": "^16.26.1",
+    "stylelint-config-standard-scss": "^17.0.0",
+    "stylelint-prettier": "^5.0.3"
+  }
+}

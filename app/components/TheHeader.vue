@@ -1,8 +1,3 @@
-<script setup lang="ts">
-// Nuxt автоматически импортирует хуки из папки composables
-const { isMenuOpen, toggleMenu } = useBurger();
-</script>
-
 <template>
   <ScrollHeader v-slot="{ isFixed, isShow, isAnimating }">
     <header
@@ -14,17 +9,24 @@ const { isMenuOpen, toggleMenu } = useBurger();
       }"
     >
       <div class="header__container">
-        <div class="header__body">
-          <div class="header__logo logo">
-            <NuxtLink
+        <div class="header__wrapper">
+          <div class="logo header__logo">
+            <RouterLink
               to="/"
               class="logo__link"
             >
               <img
-                src="@/assets/images/logo/logo.svg"
-                alt="Logo"
+                src="/images/logo/logo.svg"
+                alt="Логотип Название"
               />
-            </NuxtLink>
+              <div class="logo__text">
+                <strong>
+                  Great
+                  <span class="logo__accent">Fit</span>
+                </strong>
+                <span class="logo__subtext">Yoga Studio</span>
+              </div>
+            </RouterLink>
           </div>
 
           <nav class="header__nav nav">
@@ -39,12 +41,14 @@ const { isMenuOpen, toggleMenu } = useBurger();
               class="nav__link"
             >
               Services
+              <svgo-arrow-nav class="nav__icon" />
             </NuxtLink>
             <NuxtLink
               to="/"
               class="nav__link"
             >
               Our Facility
+              <svgo-arrow-nav class="nav__icon" />
             </NuxtLink>
             <NuxtLink
               to="/"
@@ -70,15 +74,30 @@ const { isMenuOpen, toggleMenu } = useBurger();
             <span></span>
             <span></span>
           </button>
+
+          <AppButton
+            to="/"
+            class="header__btn"
+          >
+            <svgo-cart class="header__cart" />
+            <span>Shop Now</span>
+          </AppButton>
         </div>
       </div>
     </header>
   </ScrollHeader>
 </template>
 
+<script setup>
+import AppButton from "@/components/ui/AppButton.vue";
+// import ScrollHeader from "@modules/scroll/ScrollHeader.vue";
+
+const { isMenuOpen, toggleMenu } = useBurger();
+</script>
+
 <style lang="scss" scoped>
-/* Твои стили остаются без изменений */
 .header {
+  // БАЗОВОЕ СОСТОЯНИЕ (0 - 150px)
   position: absolute;
   top: 0;
   left: 0;
@@ -87,30 +106,102 @@ const { isMenuOpen, toggleMenu } = useBurger();
   background-color: transparent;
   transform: translateY(0);
 
+  // РЕЖИМ ФИКСАЦИИ (Ниже 150px, заряжена в -100%)
   &._is-fixed {
     position: fixed;
     background-color: rgb(255 255 255 / 70%);
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 20px rgb(0 0 0 / 5%);
     transform: translateY(-100%);
+
+    .header__wrapper {
+      padding: 10px 0;
+    }
   }
 
+  // РАЗРЕШЕНИЕ АНИМАЦИИ
   &._is-animating {
     transition:
       transform 0.4s ease,
       background-color 0.3s ease;
   }
 
+  // ВЫЕЗД ШАПКИ
   &._is-show {
     transform: translateY(0);
   }
 
-  &__body {
+  &__wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 20px 0;
     transition: padding 0.3s ease;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  &__cart {
+    width: 15px;
+    height: 16px;
+  }
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      margin-right: 5px;
+    }
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    font-family: Montserrat, sans-serif;
+    strong {
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+
+  &__accent {
+    font-size: 24px;
+    color: $colorAccent;
+    font-weight: 700;
+  }
+
+  &__subtext {
+    display: flex;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: -5px;
   }
 }
 
@@ -120,10 +211,10 @@ const { isMenuOpen, toggleMenu } = useBurger();
     display: inline-flex;
     text-decoration: none;
     align-items: center;
+    justify-content: center;
     font-family: Inter, sans-serif;
     font-weight: 500;
     gap: 5px;
-    color: #000;
     padding: 3px 0;
     transition: color 0.3s ease 0s;
 
@@ -136,11 +227,15 @@ const { isMenuOpen, toggleMenu } = useBurger();
       height: 2px;
       background-color: $fontMainColor;
       transform: scaleX(0);
+      transform-origin: center;
       transition: transform 0.3s ease;
     }
 
     @media (any-hover: hover) {
       &:hover {
+        .nav__icon {
+          transform: rotate(180deg);
+        }
         &::after {
           transform: scaleX(1);
         }
@@ -148,6 +243,13 @@ const { isMenuOpen, toggleMenu } = useBurger();
         color: $fontMainColor;
       }
     }
+  }
+
+  &__icon {
+    display: flex;
+    transition: transform 0.3s ease;
+    width: 16px;
+    height: 16px;
   }
 }
 
@@ -172,9 +274,20 @@ const { isMenuOpen, toggleMenu } = useBurger();
       transform 0.3s ease,
       opacity 0.3s ease;
   }
+}
 
-  &--active {
+@media (width <= 991.98px) {
+  .header__nav,
+  .header__btn {
+    display: none;
+  }
+  .burger-btn {
+    display: flex;
+  }
+
+  .burger-btn--active {
     span {
+      z-index: 101;
       &:nth-child(1) {
         transform: translateY(9px) rotate(45deg);
       }
@@ -185,15 +298,6 @@ const { isMenuOpen, toggleMenu } = useBurger();
         transform: translateY(-9px) rotate(-45deg);
       }
     }
-  }
-}
-
-@media (width <= 991.98px) {
-  .header__nav {
-    display: none;
-  }
-  .burger-btn {
-    display: flex;
   }
 }
 </style>

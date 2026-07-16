@@ -1,6 +1,10 @@
 <template>
   <div>
-    <div class="ptb"><h1>Главная страница</h1></div>
+<HomeHero />
+<HomeServices />
+<HomeClasses />
+<HomeTeam />
+<HomeMember />
   </div>
 </template>
 

@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { computed, watch } from "vue";
 import { useBurger } from "~/composables/useBurger";
-import { burgerConfig } from "./config"; // Импортируем наш правильный конфиг бургера
+import { burgerConfig } from "./config";
 import { gsap } from "gsap";
 
 const { isMenuOpen, toggleMenu, handleMenuClick } = useBurger();

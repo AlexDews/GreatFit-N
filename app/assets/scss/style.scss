@@ -7,13 +7,13 @@
 body {
   display: flex;
   flex-direction: column;
-  font-family: $fontFamily;
   font-size: $fontSize;
   background-color: $colorBg;
   color: $fontColor;
   position: relative;
   overflow-x: hidden;
   min-height: 100vh;
+  font-family: $fontFamily;
 }
 
 .main {

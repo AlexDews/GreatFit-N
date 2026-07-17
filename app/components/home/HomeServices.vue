@@ -191,6 +191,25 @@ const servicesList = [
     }
   }
 
+  // .services__slide
+  &__slide {
+    width: 294px;
+    background-color: #f6f9fc;
+    padding: 35px;
+    border-radius: 25px;
+    transform: translate(0);
+    transition: transform 0.3s ease 0s;
+
+    @media (any-hover: hover) {
+      &:hover {
+        transform: translateY(-15px);
+      }
+    }
+
+    @media (max-width: $mobile) {
+    }
+  }
+
   // .services__card
   &__card {
     display: flex;
@@ -202,20 +221,11 @@ const servicesList = [
   // .services__swiper
   &__swiper {
     padding-left: 50px;
+    padding-top: 15px;
+    margin-top: -15px;
 
     @media (max-width: $mobile) {
       padding-left: 0;
-    }
-  }
-
-  // .services__slide
-  &__slide {
-    width: 294px;
-    background-color: #f6f9fc;
-    padding: 35px;
-    border-radius: 25px;
-
-    @media (max-width: $mobile) {
     }
   }
 
@@ -299,6 +309,7 @@ const servicesList = [
   }
 }
 .swiper-button-disabled {
+  cursor: default;
   svg {
     color: rgb(72 92 70 / 70%);
   }

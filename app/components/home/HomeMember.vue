@@ -51,55 +51,81 @@ import AppButton from "@/components/ui/AppButton.vue";
     background-color: #fff;
   }
 }
+
 .member {
   // .member__content
   &__content {
-    position: relative;
     display: grid;
+
+    // На десктопе делаем 2 колонки
     grid-template-columns: repeat(2, 1fr);
     align-items: center;
     overflow: hidden;
 
-    // Внутренние отступы секции задают высоту фоновой картинки на десктопе
     @include adaptiveValue("padding-top", 90, 45);
     @include adaptiveValue("padding-bottom", 90, 45);
-    @include adaptiveValue("padding-left", 60, 20);
-    @include adaptiveValue("padding-right", 60, 20);
+
+    // @include adaptiveValue("padding-left", 60, 20);
+    // @include adaptiveValue("padding-right", 60, 20);
 
     @media (max-width: $mobile) {
-      display: flex;
-      flex-direction: column;
+      // На мобилках переключаемся в 1 колонку
+      grid-template-columns: 1fr;
+      gap: 20px;
       padding: 20px;
     }
   }
 
+  // Наша подложка-картинка
   &__bg {
-    position: absolute;
-    top: 0;
-    left: 0;
+    z-index: 1;
     width: 100%;
     height: 100%;
-    z-index: 1;
+
+    // На десктопе растягиваем картинку на ОБЕ колонки (от 1 до 3 линии grid)
+    grid-column: 1 / 3;
+    grid-row: 1; // Сажаем в первую строку
+
+    @media (max-width: $mobile) {
+      // На мобилках картинка занимает свою честную единственную колонку и строку
+      grid-column: 1;
+      grid-row: 1;
+      height: 250px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
   }
 
   // .member__img
   :deep(.member__img) {
+    height: 100%;
     img {
+      width: 100%;
+      height: 100%;
       object-fit: cover;
     }
   }
 
+  // Наш контент (плашка с текстом)
   &__body {
-    grid-column: 2;
-    z-index: 2;
+    z-index: 2; // Поднимаем над картинкой
     background-color: #fff;
     border-radius: 25px;
-    width: 100%;
+
+    // На десктопе сажаем плашку ТОЛЬКО во вторую колонку, но в ТУ ЖЕ первую строку, где лежит картинка
+    grid-column: 2;
+    grid-row: 1;
 
     @include adaptiveValue("padding", 48, 24);
+    @include adaptiveValue("margin-top", 48, 24);
+    @include adaptiveValue("margin-bottom", 48, 24);
+    @include adaptiveValue("margin-right", 48, 24);
 
     @media (max-width: $mobile) {
-      grid-column: auto;
+      // На мобилках плашка падает во вторую строку, под картинку
+      grid-column: 1;
+      grid-row: 2;
+      box-shadow: 0 4px 20px rgb(0 0 0 / 5%);
     }
   }
 
@@ -125,6 +151,10 @@ import AppButton from "@/components/ui/AppButton.vue";
 
     display: flex;
     gap: 10px;
+
+    @media (max-width: $mobileSmall) {
+      flex-direction: column;
+    }
   }
 
   // .member__btn-link
@@ -132,6 +162,7 @@ import AppButton from "@/components/ui/AppButton.vue";
     @media (max-width: $mobileSmall) {
       font-size: 14px;
       padding: 15px 10px;
+      width: 100%;
     }
   }
 
@@ -158,6 +189,7 @@ import AppButton from "@/components/ui/AppButton.vue";
     @media (max-width: $mobileSmall) {
       font-size: 14px;
       padding: 15px 10px;
+      width: 100%;
     }
   }
 
@@ -165,7 +197,8 @@ import AppButton from "@/components/ui/AppButton.vue";
   &__arrow {
     transition: transform 0.3s ease 0s;
     width: 16px;
-    height: 16px;
+    height: 18px;
+    padding-top: 2px;
   }
 }
 </style>

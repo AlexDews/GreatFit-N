@@ -16,7 +16,7 @@ export const burgerConfig: BurgerConfig = {
   //~ --- Настройки визуализации ---
   appearance: {
     direction: "right", // Откуда вылетает меню
-    size: "", // Ширина/высота (если пусто — по умолчанию 100vw/100vh)
-    animationType: "stagger-fade", // Пресет анимации пунктов ("stagger-slide" | "stagger-fade" | "scale-up")
+    size: "320px", // Ширина/высота (если пусто — по умолчанию 100vw/100vh)
+    animationType: "scale-up", // Пресет анимации пунктов ("stagger-slide" | "stagger-fade" | "scale-up")
   },
 };

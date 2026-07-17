@@ -1,39 +1,49 @@
 <template>
+  <!-- Кнопка остается на своем месте в шапке -->
   <button
     class="burger-btn"
-    :class="{ _active: isMenuOpen }"
+    :class="{ 'burger-btn--active': isMenuOpen }"
+    aria-label="Открыть меню"
     @click="toggleMenu"
   >
     <span></span>
+    <span></span>
+    <span></span>
   </button>
 
-  <div
-    v-if="isMenuOpen"
-    class="menu-backdrop"
-    @click="handleMenuClick"
-  />
+  <!-- Телепортируем само меню и бэкдроп прямо в <body> -->
+  <Teleport to="body">
+    <div
+      v-if="isMenuOpen"
+      class="menu-backdrop"
+      @click="handleMenuClick"
+    />
 
-  <nav
-    class="menu-body"
-    :class="[`_dir-${burgerConfig.appearance.direction}`, { _active: isMenuOpen }]"
-    :style="menuStyles"
-    @click="handleMenuClick"
-  >
-    <ul class="menu-list">
-      <li class="menu-item js-menu-item">
-        <NuxtLink to="/">Главная</NuxtLink>
-      </li>
-      <li class="menu-item js-menu-item">
-        <NuxtLink to="/services">Услуги</NuxtLink>
-      </li>
-      <li class="menu-item js-menu-item">
-        <NuxtLink to="/portfolio">Портфолио</NuxtLink>
-      </li>
-      <li class="menu-item js-menu-item">
-        <a href="#contacts">Контакты</a>
-      </li>
-    </ul>
-  </nav>
+    <nav
+      class="menu-body"
+      :class="[`_dir-${burgerConfig.appearance.direction}`, { _active: isMenuOpen }]"
+      :style="menuStyles"
+      @click="handleMenuClick"
+    >
+      <ul class="menu-list">
+        <li class="menu-item js-menu-item">
+          <NuxtLink to="/">Home</NuxtLink>
+        </li>
+        <li class="menu-item js-menu-item">
+          <NuxtLink to="/services">Services <svgo-arrow-nav class="nav__icon" /></NuxtLink>
+        </li>
+        <li class="menu-item js-menu-item">
+          <NuxtLink to="/facility">Our Facility <svgo-arrow-nav class="nav__icon" /></NuxtLink>
+        </li>
+        <li class="menu-item js-menu-item">
+          <a to="/about">About</a>
+        </li>
+        <li class="menu-item js-menu-item">
+          <a to="/contact">Contact</a>
+        </li>
+      </ul>
+    </nav>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -64,7 +74,6 @@ watch(isMenuOpen, (isOpen) => {
 
   if (isOpen) {
     if (animType === "stagger-slide") {
-      // Вариант 1: Сдвиг сбоку
       gsap.fromTo(
         ".js-menu-item",
         {
@@ -81,7 +90,6 @@ watch(isMenuOpen, (isOpen) => {
         },
       );
     } else if (animType === "stagger-fade") {
-      // Вариант 2: Мягкое всплытие снизу
       gsap.fromTo(
         ".js-menu-item",
         {
@@ -98,25 +106,23 @@ watch(isMenuOpen, (isOpen) => {
         },
       );
     } else if (animType === "scale-up") {
-      // Вариант 3: Пружинящее увеличение масштаба
       gsap.fromTo(
         ".js-menu-item",
         {
           opacity: 0,
-          scale: 0.9,
+          scale: 0.4,
         },
         {
           opacity: 1,
           scale: 1,
           duration: 0.4,
-          stagger: 0.06,
+          stagger: 0.2,
           ease: "back.out(1.5)",
-          delay: 0.15,
+          delay: 0.25,
         },
       );
     }
   } else {
-    // Анимация быстрого скрытия при закрытии меню
     const exitY = animType === "stagger-fade" ? -10 : 0;
     const exitX = animType === "stagger-slide" ? (burgerConfig.appearance.direction === "left" ? -15 : 15) : 0;
 
@@ -132,18 +138,66 @@ watch(isMenuOpen, (isOpen) => {
 </script>
 
 <style lang="scss" scoped>
+// Стили для кнопки бургера и красивой CSS-анимации ее превращения в крестик
+.burger-btn {
+  position: relative;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 61; // Должен быть выше, чем .menu-body (50)
+  padding: 0;
+
+  span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #000; // Цвет линий (под кастомный дизайн можно менять)
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+    transform-origin: left center;
+  }
+
+  @media (min-width: $tablet) {
+    display: none;
+  }
+
+  @media (max-width: $tablet) {
+    display: flex;
+}
+
+  // Анимация превращения трех полосок в крестик
+  &--active {
+    span {
+      &:nth-child(1) {
+        transform: rotate(45deg) translate(2px, -2px);
+      }
+      &:nth-child(2) {
+        opacity: 0;
+        transform: scale(0);
+      }
+      &:nth-child(3) {
+        transform: rotate(-45deg) translate(2px, 2px);
+      }
+    }
+  }
+}
+
 .menu-body {
   position: fixed;
   z-index: 50;
-  background-color: #1a1a1a;
+  background-color: #fff;
   transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   outline: none;
-
-  // Размеры подтягиваются из JS-переменных
   width: var(--menu-width);
   height: var(--menu-height);
+  display: flex;
+  justify-content: center;
 
-  // Стили для разных направлений вылета
   &._dir-left {
     top: 0;
     left: 0;
@@ -181,7 +235,18 @@ watch(isMenuOpen, (isOpen) => {
   }
 }
 
-// Теневая подложка бэкграунда
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  font-size: 24px;
+
+
+}
+.menu-item {}
+
 .menu-backdrop {
   position: fixed;
   top: 0;

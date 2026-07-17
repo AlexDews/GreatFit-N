@@ -54,10 +54,14 @@ import AppPicture from "@/components/ui/AppPicture.vue";
 }
 
 .hero {
-  position: sticky;
   top: 0;
   z-index: 1;
   height: 100vh;
+  position: relative;
+
+  @media (min-width: $tablet) {
+    position: sticky;
+  }
 
   // .hero__wrapper
   &__wrapper {
@@ -69,8 +73,8 @@ import AppPicture from "@/components/ui/AppPicture.vue";
     top: 0;
     left: 0;
     width: 100%;
-    min-height: 100%;
     height: 100vh;
+    min-height: 100%;
     overflow: hidden;
   }
 
@@ -78,7 +82,7 @@ import AppPicture from "@/components/ui/AppPicture.vue";
   &__img {
     width: 100%;
     height: 100%;
-    display: flex;
+    display: block;
 
     :deep(img) {
       width: 100%;
@@ -109,7 +113,7 @@ import AppPicture from "@/components/ui/AppPicture.vue";
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      width: 90%;
+      width: 100%;
     }
   }
 
@@ -183,7 +187,8 @@ import AppPicture from "@/components/ui/AppPicture.vue";
   &__arrow {
     transition: transform 0.3s ease 0s;
     width: 16px;
-    height: 16px;
+    height: 18px;
+    padding-top: 2px;
   }
 }
 </style>

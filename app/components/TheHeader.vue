@@ -1,6 +1,7 @@
 <template>
   <ScrollHeader v-slot="{ isFixed, isShow, isAnimating }">
     <header
+      data-lp
       class="header"
       :class="{
         '_is-fixed': isFixed,
@@ -30,50 +31,54 @@
           </div>
 
           <nav class="header__nav nav">
-            <NuxtLink
-              to="/"
-              class="nav__link"
-            >
-              Home
-            </NuxtLink>
-            <NuxtLink
-              to="/"
-              class="nav__link"
-            >
-              Services
-              <svgo-arrow-nav class="nav__icon" />
-            </NuxtLink>
-            <NuxtLink
-              to="/"
-              class="nav__link"
-            >
-              Our Facility
-              <svgo-arrow-nav class="nav__icon" />
-            </NuxtLink>
-            <NuxtLink
-              to="/"
-              class="nav__link"
-            >
-              About
-            </NuxtLink>
-            <NuxtLink
-              to="/"
-              class="nav__link"
-            >
-              Contact
-            </NuxtLink>
+            <ul class="nav__menu">
+              <li class="nav__item">
+                <NuxtLink
+                  to="/"
+                  class="nav__link"
+                >
+                  Home
+                </NuxtLink>
+              </li>
+              <li class="nav__item">
+                <NuxtLink
+                  to="/services"
+                  class="nav__link"
+                >
+                  Services
+                  <svgo-arrow-nav class="nav__icon" />
+                </NuxtLink>
+              </li>
+              <li class="nav__item">
+                <NuxtLink
+                  to="/facility"
+                  class="nav__link"
+                >
+                  Our Facility
+                  <svgo-arrow-nav class="nav__icon" />
+                </NuxtLink>
+              </li>
+              <li class="nav__item">
+                <NuxtLink
+                  to="/about"
+                  class="nav__link"
+                >
+                  About
+                </NuxtLink>
+              </li>
+              <li class="nav__item">
+                <NuxtLink
+                  to="/contact"
+                  class="nav__link"
+                >
+                  Contact
+                </NuxtLink>
+              </li>
+            </ul>
           </nav>
-
-          <button
-            class="burger-btn"
-            :class="{ 'burger-btn--active': isMenuOpen }"
-            aria-label="Открыть меню"
-            @click="toggleMenu"
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+          <div class="header__burger">
+            <AppMobileMenu />
+          </div>
 
           <AppButton
             to="/"
@@ -90,9 +95,8 @@
 
 <script setup>
 import AppButton from "@/components/ui/AppButton.vue";
+import AppMobileMenu from "~/components/modules/burger/AppMobileMenu.vue";
 // import ScrollHeader from "@modules/scroll/ScrollHeader.vue";
-
-const { isMenuOpen, toggleMenu } = useBurger();
 </script>
 
 <style lang="scss" scoped>
@@ -137,6 +141,7 @@ const { isMenuOpen, toggleMenu } = useBurger();
     justify-content: space-between;
     padding: 20px 0;
     transition: padding 0.3s ease;
+    position: relative;
   }
 
   &__logo {
@@ -146,9 +151,6 @@ const { isMenuOpen, toggleMenu } = useBurger();
   }
 
   &__nav {
-    display: flex;
-    align-items: center;
-    gap: 32px;
   }
 
   &__btn {
@@ -163,6 +165,8 @@ const { isMenuOpen, toggleMenu } = useBurger();
   &__cart {
     width: 15px;
     height: 16px;
+  }
+  &__burger {
   }
 }
 
@@ -206,10 +210,19 @@ const { isMenuOpen, toggleMenu } = useBurger();
 }
 
 .nav {
+  &__menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+  }
+  &__item {
+    gap: 15px;
+  }
   &__link {
     position: relative;
-    display: inline-flex;
     text-decoration: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     font-family: Inter, sans-serif;
@@ -253,51 +266,10 @@ const { isMenuOpen, toggleMenu } = useBurger();
   }
 }
 
-.burger-btn {
-  display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 30px;
-  height: 20px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  z-index: 101;
-  padding: 0;
-
-  span {
-    display: block;
-    width: 100%;
-    height: 2px;
-    background-color: #000;
-    transition:
-      transform 0.3s ease,
-      opacity 0.3s ease;
-  }
-}
-
-@media (width <= 991.98px) {
+@media (max-width: $tablet) {
   .header__nav,
   .header__btn {
     display: none;
-  }
-  .burger-btn {
-    display: flex;
-  }
-
-  .burger-btn--active {
-    span {
-      z-index: 101;
-      &:nth-child(1) {
-        transform: translateY(9px) rotate(45deg);
-      }
-      &:nth-child(2) {
-        opacity: 0;
-      }
-      &:nth-child(3) {
-        transform: translateY(-9px) rotate(-45deg);
-      }
-    }
   }
 }
 </style>

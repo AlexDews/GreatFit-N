@@ -5,7 +5,7 @@ export const systemConfig = {
   bodyLock: {
     delay: 300,
     paddingAttr: "[data-lp]",
-    lockClass: "_lock",
+    lockClass: "lock",
   },
 
   // --- Системный детект девайсов ---

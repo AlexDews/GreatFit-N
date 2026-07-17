@@ -12,7 +12,6 @@ body {
   color: $fontColor;
   position: relative;
   overflow-x: hidden;
-  min-height: 100vh;
   font-family: $fontFamily;
 }
 
@@ -22,6 +21,6 @@ body {
 
 // ~ Вспомогательные глобальные утилиты
 .ptb {
-  @include adaptiveValue("padding-top", 96, 76);
-  @include adaptiveValue("padding-bottom", 96, 76);
+  @include adaptiveValue("padding-top", 90, 76);
+  @include adaptiveValue("padding-bottom", 90, 76);
 }

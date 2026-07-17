@@ -69,7 +69,7 @@ const classTeams = [
               :desktop-src="team.image"
               class="team__img"
               :alt="team.name"
-              loading="lazy"
+              :lazy="true"
             />
             <div class="team__bg">
               <div class="team__name">{{ team.name }}</div>

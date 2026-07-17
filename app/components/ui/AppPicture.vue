@@ -52,9 +52,7 @@ const imgOptions = computed(() => {
 
 <style lang="scss" scoped>
 .app-picture {
-  display: block;
-  width: 100%;
-  height: 100%;
+  display: contents;
 
   img {
     width: 100%;

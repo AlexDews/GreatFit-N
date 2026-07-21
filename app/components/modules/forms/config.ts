@@ -36,7 +36,7 @@ export const formConfig = {
   messages: {
     required: "Заполните поле",
     email: "Введите корректный Email",
-    phone: "Номер телефона в формате: +7 (XXX) XXX-XX-XX",
+    phone: "Error, incorrect phone number",
     number: "Только цифры",
     password: "Минимум 8 символов (буква + цифра)",
     date: "Формат: ДД.ММ.ГГГГ",

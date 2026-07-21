@@ -1,67 +1,68 @@
 // app/composables/useBodyLock.ts
+
 import { ref } from "vue";
 import { systemConfig } from "./system.config";
 
-/**
- ** LuminaNexus Scroll Lock Engine
- */
 const isLocked = ref(false);
-let bodyLockStatus = true; // Защита от дебаунса (двойных кликов)
-
-const getScrollWidth = (): string => {
-  if (!import.meta.client) return "0px";
-  return `${window.innerWidth - document.documentElement.clientWidth}px`;
-};
+let bodyLockStatus = true;
+let scrollY = 0;
 
 export function useBodyLock() {
-  //--- Включить блокировку скролла ---
-  const lock = (delay: number = systemConfig.bodyLock.delay): void => {
-    if (!import.meta.client || !bodyLockStatus) return;
+  const lock = (delay: number = systemConfig.bodyLock.delay, force = false): void => {
+    if (!import.meta.client) return;
+    if (!bodyLockStatus && !force) return;
+    if (isLocked.value) return;
 
-    const lockPadding = document.querySelectorAll<HTMLElement>(systemConfig.bodyLock.paddingAttr);
-    const paddingValue = getScrollWidth();
+    scrollY = window.scrollY;
 
-    lockPadding.forEach((el) => {
-      el.style.paddingRight = paddingValue;
-    });
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
 
-    document.body.style.paddingRight = paddingValue;
+    document.documentElement.style.setProperty("--scrollbar-width", `${scrollbarWidth}px`);
+
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = `${scrollbarWidth}px`;
+
     document.documentElement.classList.add(systemConfig.bodyLock.lockClass);
 
     bodyLockStatus = false;
     isLocked.value = true;
 
-    setTimeout(() => {
+    window.setTimeout(() => {
       bodyLockStatus = true;
     }, delay);
   };
 
-  //--- Выключить блокировку скролла ---
-  const unlock = (delay: number = systemConfig.bodyLock.delay): void => {
-    if (!import.meta.client || !bodyLockStatus) return;
+  const unlock = (delay: number = systemConfig.bodyLock.delay, force = false): void => {
+    if (!import.meta.client) return;
+    if (!bodyLockStatus && !force) return;
+    if (!isLocked.value) return;
 
-    const lockPadding = document.querySelectorAll<HTMLElement>(systemConfig.bodyLock.paddingAttr);
-
-    lockPadding.forEach((el) => {
-      el.style.paddingRight = "0px";
-    });
-
-    document.body.style.paddingRight = "0px";
     document.documentElement.classList.remove(systemConfig.bodyLock.lockClass);
 
-    bodyLockStatus = false;
+    // Снимаем все стили, но запоминаем scrollY
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+
+    // И сразу возвращаем страницу
+    window.scrollTo(0, scrollY);
+
     isLocked.value = false;
 
-    setTimeout(() => {
+    bodyLockStatus = false;
+
+    window.setTimeout(() => {
       bodyLockStatus = true;
     }, delay);
   };
 
-  //--- Переключить состояние ---
   const toggleLock = (delay: number = systemConfig.bodyLock.delay): void => {
     if (!import.meta.client) return;
 
-    if (document.documentElement.classList.contains(systemConfig.bodyLock.lockClass)) {
+    if (isLocked.value) {
       unlock(delay);
     } else {
       lock(delay);

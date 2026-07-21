@@ -1,72 +1,3 @@
-<template>
-  <div
-    :id="`ln-tabs-${id}`"
-    ref="tabsRef"
-    class="ln-tabs"
-    :class="{ '_tab-spoller': isMobile }"
-    :style="tabsStyle"
-  >
-    <div
-      v-if="!isMobile"
-      class="ln-tabs__titles"
-      :class="classTitles"
-    >
-      <button
-        v-for="(item, index) in items"
-        :key="'title-' + index"
-        type="button"
-        class="ln-tabs__title"
-        :class="[{ [tabsConfig.activeClass]: activeIndex === index }, classTab]"
-        @click="selectTab(index)"
-      >
-        {{ item.title }}
-      </button>
-    </div>
-
-    <div class="ln-tabs__body">
-      <div
-        v-for="(item, index) in items"
-        :key="'block-' + index"
-        class="ln-tabs__block"
-      >
-        <button
-          v-if="isMobile"
-          type="button"
-          class="ln-tabs__title ln-tabs__title--mobile"
-          :class="[{ [tabsConfig.activeClass]: activeIndex === index }, classTab]"
-          @click="selectTab(index)"
-        >
-          {{ item.title }}
-        </button>
-
-        <Transition
-          mode="out-in"
-          @before-enter="beforeEnter"
-          @enter="enter"
-          @after-enter="afterEnter"
-          @before-leave="beforeLeave"
-          @leave="leave"
-          @after-leave="afterLeave"
-        >
-          <div
-            v-show="activeIndex === index"
-            class="ln-tabs__content-wrapper"
-          >
-            <div class="ln-tabs__content">
-              <slot
-                :name="'content-' + index"
-                :item="item"
-              >
-                {{ item.content }}
-              </slot>
-            </div>
-          </div>
-        </Transition>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { tabsConfig } from "~/components/modules/tabs/config";
@@ -97,7 +28,7 @@ const activeIndex = ref<number | null>(0);
 const isMobile = ref(false);
 const currentMinHeight = ref<string>(""); // Временная фиксация высоты при смене табов
 
-const { goToBlock } = useSmoothScroll();
+const { goToBlock } = useGoToBlock();
 let mediaQueryList: MediaQueryList | null = null;
 
 // Динамические стили для удержания высоты в момент анимации
@@ -108,20 +39,26 @@ const tabsStyle = computed(() => {
 const selectTab = (index: number) => {
   if (isMobile.value && activeIndex.value === index) {
     activeIndex.value = null;
+
     if (tabsConfig.useHash) {
       window.location.hash = "";
     }
+
     return;
   }
 
   if (tabsRef.value) {
-    // 1. Фиксируем текущую высоту контейнера, чтобы страница не схлопывалась в ноль
     currentMinHeight.value = `${tabsRef.value.offsetHeight}px`;
 
-    // 2. Если шапка табов ушла за пределы экрана вверх, плавно возвращаем юзера к началу этого блока
     const rect = tabsRef.value.getBoundingClientRect();
+
     if (rect.top < 0) {
-      goToBlock(`#ln-tabs-${props.id}`, { speed: tabsConfig.speed });
+      goToBlock(`#ln-tabs-${props.id}`, {
+        speed: tabsConfig.speed,
+        noHeader: true,
+        offsetTop: 10,
+        closeMenu: false,
+      });
     }
   }
 
@@ -131,7 +68,6 @@ const selectTab = (index: number) => {
     window.location.hash = `tab-${props.id}-${index}`;
   }
 };
-
 const checkHash = () => {
   if (!import.meta.client) return;
   const hash = window.location.hash;
@@ -210,6 +146,75 @@ onUnmounted(() => {
 });
 </script>
 
+<template>
+  <div
+    :id="`ln-tabs-${id}`"
+    ref="tabsRef"
+    class="ln-tabs"
+    :class="{ '_tab-spoller': isMobile }"
+    :style="tabsStyle"
+  >
+    <div
+      v-if="!isMobile"
+      class="ln-tabs__titles"
+      :class="classTitles"
+    >
+      <button
+        v-for="(item, index) in items"
+        :key="'title-' + index"
+        type="button"
+        class="ln-tabs__title"
+        :class="[{ [tabsConfig.activeClass]: activeIndex === index }, classTab]"
+        @click="selectTab(index)"
+      >
+        {{ item.title }}
+      </button>
+    </div>
+
+    <div class="ln-tabs__body">
+      <div
+        v-for="(item, index) in items"
+        :key="'block-' + index"
+        class="ln-tabs__block"
+      >
+        <button
+          v-if="isMobile"
+          type="button"
+          class="ln-tabs__title ln-tabs__title--mobile"
+          :class="[{ [tabsConfig.activeClass]: activeIndex === index }, classTab]"
+          @click="selectTab(index)"
+        >
+          {{ item.title }}
+        </button>
+
+        <Transition
+          mode="out-in"
+          @before-enter="beforeEnter"
+          @enter="enter"
+          @after-enter="afterEnter"
+          @before-leave="beforeLeave"
+          @leave="leave"
+          @after-leave="afterLeave"
+        >
+          <div
+            v-show="activeIndex === index"
+            class="ln-tabs__content-wrapper"
+          >
+            <div class="ln-tabs__content">
+              <slot
+                :name="'content-' + index"
+                :item="item"
+              >
+                {{ item.content }}
+              </slot>
+            </div>
+          </div>
+        </Transition>
+      </div>
+    </div>
+  </div>
+</template>
+
 <style lang="scss" scoped>
 .ln-tabs {
   width: 100%;
@@ -217,7 +222,6 @@ onUnmounted(() => {
 }
 .ln-tabs__titles {
   display: flex;
-  border-bottom: 2px solid #eee;
   gap: 20px;
   margin-bottom: 20px;
 }
@@ -229,13 +233,12 @@ onUnmounted(() => {
   font-weight: 600;
   cursor: pointer;
   color: #666;
-  border-bottom: 2px solid transparent;
   margin-bottom: -2px;
   transition: all 0.3s ease;
 }
 .ln-tabs__title._tab-active {
-  color: #000;
-  border-bottom-color: #000;
+  // color: #000;
+  // border-bottom-color: #000;
 }
 .ln-tabs__title--mobile {
   width: 100%;
@@ -249,7 +252,7 @@ onUnmounted(() => {
   background: #eee;
 }
 .ln-tabs__content {
-  padding: 15px 5px;
+  padding: 0 5px;
   line-height: 1.6;
 }
 </style>

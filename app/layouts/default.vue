@@ -1,3 +1,4 @@
+<!-- app\layouts\default.vue -->
 <script setup></script>
 
 <template>
@@ -9,6 +10,7 @@
       <slot />
     </main>
     <TheFooter />
+    <ThePopup />
   </div>
 </template>
 

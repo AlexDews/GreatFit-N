@@ -172,11 +172,15 @@ const classTeams = [
     pointer-events: none;
 
     @media (max-width: $tablet) {
-      @include adaptiveValue("top", 200, 150);
+      @include adaptiveValue("top", 230, 178);
 
       left: 0;
       transform: translateY(0);
       height: 100px;
+    }
+
+    @media (max-width: $mobile) {
+      @include adaptiveValue("top", 197, 155);
     }
   }
 

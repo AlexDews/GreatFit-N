@@ -78,6 +78,21 @@ export default defineNuxtConfig({
   // 9. Настройки сторонних плагинов
   svgo: {
     autoImportPath: "./assets/icons/",
+    svgoConfig: {
+      plugins: [
+        "preset-default",
+        {
+          name: "convertShapeToPath",
+          params: {},
+        },
+        {
+          name: "removeAttrs",
+          params: {
+            attrs: "(fill-rule|clip-rule)",
+          },
+        },
+      ],
+    },
   },
 
   // 10. Тонкие настройки Nuxt (Features)

@@ -3,74 +3,89 @@ import { reactive } from "vue";
 import { popupConfig } from "./config";
 import { useBodyLock } from "~/composables/useBodyLock";
 
-// Инициализируем хук блокировки скролла из нашей общей папки композаблов
-const { lock: bodyLock, unlock: bodyUnlock } = useBodyLock();
-
-interface PopupStore {
+interface PopupState {
   activePopup: string | null;
   previousPopup: string | null;
-  open: (name: string) => void;
-  close: () => void;
 }
 
-export const popupStore = reactive<PopupStore>({
+export const popupState = reactive<PopupState>({
   activePopup: null,
   previousPopup: null,
+});
+
+export const popupStore = {
+  get activePopup() {
+    return popupState.activePopup;
+  },
+
+  get previousPopup() {
+    return popupState.previousPopup;
+  },
 
   open(name: string) {
     if (!name) return;
 
-    // ИСПРАВЛЕНО: Добавлен безопасный вызов ?.
     popupConfig.on?.beforeOpen?.(name);
 
-    this.previousPopup = this.activePopup;
-    this.activePopup = name;
+    popupState.previousPopup = popupState.activePopup;
+    popupState.activePopup = name;
 
     if (popupConfig.bodyLock && import.meta.client) {
-      bodyLock();
+      const { lock } = useBodyLock();
+      lock(undefined, true);
+
       document.documentElement.classList.add(popupConfig.classes.bodyActive);
     }
 
     if (popupConfig.hashSettings?.location && import.meta.client) {
-      history.pushState("", "", `#${name}`);
+      history.pushState("", "", `#popup-${name}`);
     }
 
-    // ИСПРАВЛЕНО: Добавлен безопасный вызов ?.
     popupConfig.on?.afterOpen?.(name);
   },
 
   close() {
-    if (!this.activePopup) return;
+    if (!popupState.activePopup) return;
 
-    // ИСПРАВЛЕНО: Добавлен безопасный вызов ?.
-    popupConfig.on?.beforeClose?.(this.activePopup);
-    const closedName = this.activePopup;
+    popupConfig.on?.beforeClose?.(popupState.activePopup);
 
-    this.activePopup = null;
+    const closedName = popupState.activePopup;
+
+    popupState.activePopup = null;
 
     if (popupConfig.bodyLock && import.meta.client) {
+      const { unlock } = useBodyLock();
+
       document.documentElement.classList.remove(popupConfig.classes.bodyActive);
-      bodyUnlock();
+
+      unlock(undefined, true);
     }
 
     if (popupConfig.hashSettings?.location && import.meta.client) {
-      history.pushState("", "", window.location.href.split("#")[0]);
+      history.pushState("", "", window.location.pathname + window.location.search);
     }
 
-    // ИСПРАВЛЕНО: Добавлен безопасный вызов ?.
     popupConfig.on?.afterClose?.(closedName);
   },
-});
+};
 
-// Слушаем изменение хэша (только на клиенте)
+// -----------------------------
+// Hash Navigation
+// -----------------------------
+
 if (import.meta.client && popupConfig.hashSettings?.goHash) {
-  const checkHash = () => {
-    const hash = window.location.hash.replace("#", "");
-    if (hash) {
-      popupStore.open(hash);
-    } else {
+  window.addEventListener("hashchange", () => {
+    const hash = window.location.hash.slice(1);
+
+    if (!hash) {
       popupStore.close();
+      return;
     }
-  };
-  window.addEventListener("hashchange", checkHash);
+
+    if (!hash.startsWith("popup-")) {
+      return;
+    }
+
+    popupStore.open(hash.replace("popup-", ""));
+  });
 }

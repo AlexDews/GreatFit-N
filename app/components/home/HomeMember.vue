@@ -1,10 +1,11 @@
 <script setup>
 import AppPicture from "@/components/ui/AppPicture.vue";
 import AppButton from "@/components/ui/AppButton.vue";
+import { popupStore } from "@/components/modules/popup/popupStore";
 </script>
 
 <template>
-  <section class="main__member member ptb">
+  <section class="main__member member">
     <div class="member__content">
       <div class="member__bg -ibg">
         <AppPicture
@@ -32,9 +33,10 @@ import AppButton from "@/components/ui/AppButton.vue";
           <AppButton
             to="/"
             class="member__btn-contacts"
+            @click="popupStore.open('callback')"
           >
             <span>Contact Us</span>
-            <svgo-arrow class="member__arrow" />
+            <svgo-arrow-nav class="member__arrow" />
           </AppButton>
         </div>
       </div>
@@ -53,41 +55,27 @@ import AppButton from "@/components/ui/AppButton.vue";
 }
 
 .member {
-  // .member__content
   &__content {
     display: grid;
-
-    // На десктопе делаем 2 колонки
     grid-template-columns: repeat(2, 1fr);
     align-items: center;
     overflow: hidden;
 
-    @include adaptiveValue("padding-top", 90, 45);
-    @include adaptiveValue("padding-bottom", 90, 45);
-
-    // @include adaptiveValue("padding-left", 60, 20);
-    // @include adaptiveValue("padding-right", 60, 20);
-
     @media (max-width: $mobile) {
-      // На мобилках переключаемся в 1 колонку
       grid-template-columns: 1fr;
       gap: 20px;
       padding: 20px;
     }
   }
 
-  // Наша подложка-картинка
   &__bg {
     z-index: 1;
     width: 100%;
     height: 100%;
-
-    // На десктопе растягиваем картинку на ОБЕ колонки (от 1 до 3 линии grid)
     grid-column: 1 / 3;
     grid-row: 1; // Сажаем в первую строку
 
     @media (max-width: $mobile) {
-      // На мобилках картинка занимает свою честную единственную колонку и строку
       grid-column: 1;
       grid-row: 1;
       height: 250px;
@@ -108,21 +96,18 @@ import AppButton from "@/components/ui/AppButton.vue";
 
   // Наш контент (плашка с текстом)
   &__body {
-    z-index: 2; // Поднимаем над картинкой
+    z-index: 2;
     background-color: #fff;
     border-radius: 25px;
-
-    // На десктопе сажаем плашку ТОЛЬКО во вторую колонку, но в ТУ ЖЕ первую строку, где лежит картинка
     grid-column: 2;
     grid-row: 1;
 
     @include adaptiveValue("padding", 48, 24);
-    @include adaptiveValue("margin-top", 48, 24);
-    @include adaptiveValue("margin-bottom", 48, 24);
+    @include adaptiveValue("margin-top", 90, 45);
+    @include adaptiveValue("margin-bottom", 90, 45);
     @include adaptiveValue("margin-right", 48, 24);
 
     @media (max-width: $mobile) {
-      // На мобилках плашка падает во вторую строку, под картинку
       grid-column: 1;
       grid-row: 2;
       box-shadow: 0 4px 20px rgb(0 0 0 / 5%);
@@ -181,7 +166,7 @@ import AppButton from "@/components/ui/AppButton.vue";
       &:hover {
         background-color: transparent;
         .member__arrow {
-          transform: translateX(3px);
+          transform: translateX(5px) rotate(90deg);
         }
       }
     }
@@ -198,7 +183,9 @@ import AppButton from "@/components/ui/AppButton.vue";
     transition: transform 0.3s ease 0s;
     width: 16px;
     height: 18px;
-    padding-top: 2px;
+    transform: rotate(-90deg);
+    position: relative;
+    top: 1px;
   }
 }
 </style>

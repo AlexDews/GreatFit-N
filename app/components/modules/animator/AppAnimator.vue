@@ -1,14 +1,16 @@
-<script setup>
+<!-- app\components\modules\animator\AppAnimator.vue -->
+<script setup lang="ts">
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-let ctx;
+let ctx: gsap.Context | null = null;
 
 const initAnimations = () => {
   ctx = gsap.context(() => {
-    gsap.utils.toArray('[data-animate="fade-up"]').forEach((el) => {
+    const fadeElements = gsap.utils.toArray<HTMLElement>('[data-animate="fade-up"]');
+      fadeElements.forEach((el) => {
       gsap.from(el, {
         scrollTrigger: {
           trigger: el,
@@ -36,3 +38,6 @@ onUnmounted(() => {
   if (ctx) ctx.revert();
 });
 </script>
+<template>
+  <slot></slot>
+</template>

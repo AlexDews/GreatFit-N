@@ -1,7 +1,9 @@
+<!-- app\components\home\HomeHero.vue -->
 <script setup>
 //~ Импортируем базовые UI-компоненты
 import AppButton from "@/components/ui/AppButton.vue";
 import AppPicture from "@/components/ui/AppPicture.vue";
+import { popupStore } from "@/components/modules/popup/popupStore";
 </script>
 
 <template>
@@ -36,11 +38,11 @@ import AppPicture from "@/components/ui/AppPicture.vue";
               Book A Session
             </AppButton>
             <AppButton
-              to="/"
               class="hero__btn-contacts"
+              @click="popupStore.open('callback')"
             >
               <span>Contact Us</span>
-              <svgo-arrow class="hero__arrow" />
+              <svgo-arrow-nav class="hero__arrow" />
             </AppButton>
           </div>
         </div>
@@ -72,7 +74,7 @@ import AppPicture from "@/components/ui/AppPicture.vue";
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 100vw;
     height: 100vh;
     min-height: 100%;
     overflow: hidden;
@@ -83,6 +85,8 @@ import AppPicture from "@/components/ui/AppPicture.vue";
     width: 100%;
     height: 100%;
     display: block;
+    object-fit: cover;
+    object-position: center;
 
     :deep(img) {
       width: 100%;
@@ -168,7 +172,7 @@ import AppPicture from "@/components/ui/AppPicture.vue";
       &:hover {
         background-color: transparent;
         .hero__arrow {
-          transform: translateX(3px);
+          transform: translateX(5px) rotate(90deg);
         }
       }
     }
@@ -188,7 +192,9 @@ import AppPicture from "@/components/ui/AppPicture.vue";
     transition: transform 0.3s ease 0s;
     width: 16px;
     height: 18px;
-    padding-top: 2px;
+    transform: rotate(-90deg);
+    position: relative;
+    top: 1px;
   }
 }
 </style>

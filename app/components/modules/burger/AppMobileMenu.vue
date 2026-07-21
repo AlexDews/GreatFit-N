@@ -1,51 +1,4 @@
-<template>
-  <!-- Кнопка остается на своем месте в шапке -->
-  <button
-    class="burger-btn"
-    :class="{ 'burger-btn--active': isMenuOpen }"
-    aria-label="Открыть меню"
-    @click="toggleMenu"
-  >
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-
-  <!-- Телепортируем само меню и бэкдроп прямо в <body> -->
-  <Teleport to="body">
-    <div
-      v-if="isMenuOpen"
-      class="menu-backdrop"
-      @click="handleMenuClick"
-    />
-
-    <nav
-      class="menu-body"
-      :class="[`_dir-${burgerConfig.appearance.direction}`, { _active: isMenuOpen }]"
-      :style="menuStyles"
-      @click="handleMenuClick"
-    >
-      <ul class="menu-list">
-        <li class="menu-item js-menu-item">
-          <NuxtLink to="/">Home</NuxtLink>
-        </li>
-        <li class="menu-item js-menu-item">
-          <NuxtLink to="/services">Services <svgo-arrow-nav class="nav__icon" /></NuxtLink>
-        </li>
-        <li class="menu-item js-menu-item">
-          <NuxtLink to="/facility">Our Facility <svgo-arrow-nav class="nav__icon" /></NuxtLink>
-        </li>
-        <li class="menu-item js-menu-item">
-          <a to="/about">About</a>
-        </li>
-        <li class="menu-item js-menu-item">
-          <a to="/contact">Contact</a>
-        </li>
-      </ul>
-    </nav>
-  </Teleport>
-</template>
-
+<!-- app\components\modules\burger\AppMobileMenu.vue -->
 <script setup lang="ts">
 import { computed, watch } from "vue";
 import { useBurger } from "~/composables/useBurger";
@@ -53,6 +6,12 @@ import { burgerConfig } from "./config";
 import { gsap } from "gsap";
 
 const { isMenuOpen, toggleMenu, handleMenuClick } = useBurger();
+
+const openSubmenu = ref<string | null>(null);
+
+const toggleSubMenu = (menuName: string) => {
+  openSubmenu.value = openSubmenu.value === menuName ? null : menuName;
+};
 
 //~--- Динамические стили для размеров меню (с дефолтами 100vw/vh) ---
 const menuStyles = computed(() => {
@@ -69,10 +28,12 @@ const menuStyles = computed(() => {
 });
 
 //~--- Пресеты анимации GSAP Stagger ---
-watch(isMenuOpen, (isOpen) => {
+watch(isMenuOpen, async (isOpen) => {
   const animType = burgerConfig.appearance.animationType;
 
   if (isOpen) {
+    await nextTick();
+
     if (animType === "stagger-slide") {
       gsap.fromTo(
         ".js-menu-item",
@@ -123,6 +84,8 @@ watch(isMenuOpen, (isOpen) => {
       );
     }
   } else {
+    openSubmenu.value = null;
+
     const exitY = animType === "stagger-fade" ? -10 : 0;
     const exitX = animType === "stagger-slide" ? (burgerConfig.appearance.direction === "left" ? -15 : 15) : 0;
 
@@ -137,6 +100,157 @@ watch(isMenuOpen, (isOpen) => {
 });
 </script>
 
+<template>
+  <!-- Кнопка остается на своем месте в шапке -->
+  <button
+    class="burger-btn"
+    :class="{ 'burger-btn--active': isMenuOpen }"
+    aria-label="Открыть меню"
+    @click="toggleMenu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- Телепортируем само меню и бэкдроп прямо в <body> -->
+  <Teleport to="body">
+    <div
+      v-if="isMenuOpen"
+      class="menu-backdrop"
+    />
+
+    <nav
+      class="menu-body"
+      :class="[`_dir-${burgerConfig.appearance.direction}`, { _active: isMenuOpen }]"
+      :style="menuStyles"
+    >
+      <ul class="menu-list">
+        <li class="menu-item js-menu-item">
+          <NuxtLink
+            to="/"
+            @click="handleMenuClick"
+          >
+            Home
+          </NuxtLink>
+        </li>
+        <li class="menu-item js-menu-item menu-item--submenu">
+          <div class="menu-subbtn">
+            <NuxtLink
+              to="/services"
+              @click="handleMenuClick"
+            >
+              Services
+            </NuxtLink>
+            <button
+              type="button"
+              class="menu-item__toggle"
+              aria-label="Open submenu"
+              :class="{ 'is-open': openSubmenu === 'services' }"
+              @click.stop="toggleSubMenu('services')"
+            >
+              <svgo-arrow-nav class="nav__icon" />
+            </button>
+          </div>
+          <AppAccordion :is-open="openSubmenu === 'services'">
+            <AppAnimator>
+              <ul class="mobile-submenu">
+                <li class="mobile-submenu__item">
+                  <NuxtLink to="/services/spa">Spa Area</NuxtLink>
+                </li>
+                <li class="mobile-submenu__item">
+                  <NuxtLink
+                    to="/services/changing-room"
+                    @click="handleMenuClick"
+                  >
+                    Changing Room
+                  </NuxtLink>
+                </li>
+                <li class="mobile-submenu__item">
+                  <NuxtLink
+                    to="/services/free-lessons"
+                    @click="handleMenuClick"
+                  >
+                    Free Lessons
+                  </NuxtLink>
+                </li>
+                <li class="mobile-submenu__item">
+                  <NuxtLink
+                    to="/services/free-rug"
+                    @click="handleMenuClick"
+                  >
+                    Free Rug
+                  </NuxtLink>
+                </li>
+              </ul>
+            </AppAnimator>
+          </AppAccordion>
+        </li>
+        <li class="menu-item js-menu-item menu-item--submenu">
+          <div class="menu-subbtn">
+            <NuxtLink
+              to="/facility"
+              @click="handleMenuClick"
+            >
+              Our Facility
+            </NuxtLink>
+            <button
+              type="button"
+              class="menu-item__toggle"
+              aria-label="Open submenu"
+              :class="{ 'is-open': openSubmenu === 'facility' }"
+              @click.stop="toggleSubMenu('facility')"
+            >
+              <svgo-arrow-nav class="nav__icon" />
+            </button>
+          </div>
+          <AppAccordion :is-open="openSubmenu === 'facility'">
+            <AppAnimator>
+              <ul class="mobile-submenu">
+                <li class="mobile-submenu__item">
+                  <NuxtLink to="/services/spa">Beginners Yoga</NuxtLink>
+                </li>
+                <li class="mobile-submenu__item">
+                  <NuxtLink
+                    to="/services/changing-room"
+                    @click="handleMenuClick"
+                  >
+                    Stretching
+                  </NuxtLink>
+                </li>
+                <li class="mobile-submenu__item">
+                  <NuxtLink
+                    to="/services/free-lessons"
+                    @click="handleMenuClick"
+                  >
+                    Fly-Yoga
+                  </NuxtLink>
+                </li>
+              </ul>
+            </AppAnimator>
+          </AppAccordion>
+        </li>
+        <li class="menu-item js-menu-item">
+          <NuxtLink
+            to="/about"
+            @click="handleMenuClick"
+          >
+            About
+          </NuxtLink>
+        </li>
+        <li class="menu-item js-menu-item">
+          <NuxtLink
+            to="/contact"
+            @click="handleMenuClick"
+          >
+            Contact
+          </NuxtLink>
+        </li>
+      </ul>
+    </nav>
+  </Teleport>
+</template>
+
 <style lang="scss" scoped>
 // Стили для кнопки бургера и красивой CSS-анимации ее превращения в крестик
 .burger-btn {
@@ -148,14 +262,14 @@ watch(isMenuOpen, (isOpen) => {
   background: transparent;
   border: none;
   cursor: pointer;
-  z-index: 61; // Должен быть выше, чем .menu-body (50)
+  z-index: 61;
   padding: 0;
 
   span {
     display: block;
     width: 100%;
     height: 2px;
-    background-color: #000; // Цвет линий (под кастомный дизайн можно менять)
+    background-color: $fontColor;
     transition:
       transform 0.3s ease,
       opacity 0.3s ease;
@@ -168,7 +282,7 @@ watch(isMenuOpen, (isOpen) => {
 
   @media (max-width: $tablet) {
     display: flex;
-}
+  }
 
   // Анимация превращения трех полосок в крестик
   &--active {
@@ -189,14 +303,18 @@ watch(isMenuOpen, (isOpen) => {
 
 .menu-body {
   position: fixed;
-  z-index: 50;
+  z-index: 40;
   background-color: #fff;
   transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   outline: none;
   width: var(--menu-width);
+  max-height: 100vh;
   height: var(--menu-height);
   display: flex;
   justify-content: center;
+  overflow-y: auto; 
+  -webkit-overflow-scrolling: touch;
+  padding: 70px 0;
 
   &._dir-left {
     top: 0;
@@ -238,14 +356,29 @@ watch(isMenuOpen, (isOpen) => {
 .menu-list {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: safe center;
   align-items: center;
   gap: 50px;
   font-size: 24px;
-
-
 }
-.menu-item {}
+.menu-item {
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__toggle {
+    .nav__icon {
+      transition: transform 0.3s ease 0s;
+      pointer-events: none;
+    }
+    &.is-open {
+      .nav__icon {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}
 
 .menu-backdrop {
   position: fixed;
@@ -255,5 +388,25 @@ watch(isMenuOpen, (isOpen) => {
   height: 100vh;
   background-color: rgb(0 0 0 / 50%);
   z-index: 40;
+}
+
+.mobile-submenu {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: max-content;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 20px;
+
+  // .mobile-submenu__item
+  &__item {
+    font-size: 18px;
+    padding: 20px 0;
+  }
+}
+:deep(.accordion__content) {
+  width: 100%; // Списки внутри будут занимать всю ширину меню, а не раздувать ссылку
 }
 </style>

@@ -1,44 +1,12 @@
-<template>
-  <Transition
-    name="popup-fade"
-    @after-enter="onAfterEnter"
-    @after-leave="onAfterLeave"
-  >
-    <div
-      v-if="isOpen"
-      class="popup"
-      role="dialog"
-      aria-modal="true"
-      @click.self="closeMe"
-      @keydown.tab="handleTabFocus"
-    >
-      <div class="popup__wrapper">
-        <div
-          ref="popupContent"
-          class="popup__content"
-        >
-          <button
-            type="button"
-            class="popup__close"
-            aria-label="Закрыть"
-            @click="closeMe"
-          >
-            ×
-          </button>
-
-          <slot></slot>
-        </div>
-      </div>
-    </div>
-  </Transition>
-</template>
-
+<!-- app\components\modules\popup\AppPopup.vue -->
 <script setup lang="ts">
 import { popupStore } from "./popupStore";
 import { popupConfig } from "./config";
+import { popupEnter, popupLeave } from "./animations";
 
 const props = defineProps<{
   name: string; // Уникальное имя попапа (id)
+  className?: string; // Пойдет на весь попап (оверлей)
 }>();
 
 const popupContent = ref<HTMLElement | null>(null);
@@ -139,7 +107,41 @@ onMounted(() => {
   }
 });
 </script>
-<style scoped>
+
+<template>
+  <Transition
+    :css="false"
+    @enter="popupEnter"
+    @leave="popupLeave"
+    @after-enter="onAfterEnter"
+    @after-leave="onAfterLeave"
+  >
+    <div
+      v-if="isOpen"
+      class="popup"
+      :class="className"
+      role="dialog"
+      aria-modal="true"
+      @click.self="closeMe"
+      @keydown.tab="handleTabFocus"
+    >
+      <div class="popup__wrapper">
+        <button
+          type="button"
+          class="popup__close"
+          aria-label="Закрыть"
+          @click="closeMe"
+        >
+          ×
+        </button>
+
+        <slot></slot>
+      </div>
+    </div>
+  </Transition>
+</template>
+
+<style scoped lang="scss">
 .popup {
   position: fixed;
   top: 0;
@@ -154,34 +156,37 @@ onMounted(() => {
 }
 
 .popup__wrapper {
-  padding: 20px;
-}
-
-.popup__content {
-  background: #fff;
-  padding: 30px;
   position: relative;
-  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+
+  // justify-content: flex-end;
 }
 
 .popup__close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  position: sticky;
   background: none;
   border: none;
   font-size: 24px;
   cursor: pointer;
-}
+  width: 31px;
+  height: 31px;
+  border-radius: 15px 15px 0 0;
+  background-color: $colorAccent;
+  color: $colorBg;
+  transition:
+    color 0.3s ease 0s,
+    background-color 0.3s ease 0s;
 
-/* Анимация плавного появления */
-.popup-fade-enter-active,
-.popup-fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.popup-fade-enter-from,
-.popup-fade-leave-to {
-  opacity: 0;
+  @media (any-hover: hover) {
+    &:hover {
+      width: 31px;
+      height: 31px;
+      border-radius: 15px 15px 0 0;
+      background-color: #f1efe5;
+      color: $colorAccent;
+    }
+  }
 }
 </style>

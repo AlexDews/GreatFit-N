@@ -1,3 +1,5 @@
+<!-- app\components\modules\forms\AppForms.vue -->
+
 <template>
   <form
     :class="{ [formConfig.classes.sending]: isSending }"

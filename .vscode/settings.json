@@ -1,0 +1,35 @@
+{
+  // Жестко привязываем плагин к корню проекта, чтобы он всегда видел node_modules
+  "stylelint.configBasedir": ".",
+
+  // Для SCSS ставим стандартный форматтер Stylelint
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  // Для Vue и JS ставим в качестве форматтера Prettier
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  // САМАЯ ВАЖНАЯ ЧАСТЬ: автофикс для ОБОИХ линтеров при сохранении
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": "explicit",
+    "source.fixAll.eslint": "explicit" // Теперь ESLint тоже автоматом фиксит косяки в JS/Vue!
+  },
+
+  // Включаем валидацию во Vue-файлах для обоих плагинов
+  "stylelint.validate": ["css", "scss", "vue"],
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "vue"],
+
+  // Отключаем встроенную валидацию VS Code, чтобы она не дублировала линтеры и не спамила ложными варнингами
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false
+}

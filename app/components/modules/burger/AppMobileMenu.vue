@@ -109,7 +109,7 @@ watch(isMenuOpen, async (isOpen) => {
     @click="toggleMenu"
   >
     <span></span>
-    <span></span>
+    <span></span>lazy 
     <span></span>
   </button>
 

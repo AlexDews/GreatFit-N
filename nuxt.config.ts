@@ -10,19 +10,33 @@ export default defineNuxtConfig({
 
   // 3. Мета-данные приложения и Фавиконки
   app: {
+    baseURL: import.meta.env.NUXT_PUBLIC_BASE_URL || "/GreatFit-N/",
     head: {
       title: "Great Fit Yoga Studio",
       meta: [{ charset: "utf-8" }, { name: "viewport", content: "width=device-width, initial-scale=1" }, { name: "theme-color", content: "#1e3d2f" }],
       link: [
-        { rel: "icon", type: "image/x-icon", href: "/favicons/favicon.ico?v=1" },
-        { rel: "icon", type: "image/svg+xml", href: "/favicons/favicon.svg?v=1" },
+        { rel: "icon", type: "image/x-icon", href: "favicons/favicon.ico" },
+        { rel: "icon", type: "image/svg+xml", href: "favicons/favicon.svg" },
         { rel: "apple-touch-icon", sizes: "180x180", href: "/favicons/apple-touch-icon.png?v=1" },
       ],
     },
   },
 
+  ssr: true,
+
+  nitro: {
+    prerender: {
+      failOnError: false, // Игнорировать ошибки пререндера
+      routes: ["/"],
+    },
+  },
+
   // 4. Шрифты (@nuxt/fonts)
   fonts: {
+    // Меняем служебную папку с _fonts на fonts
+    assets: {
+      prefix: "/fonts/",
+    },
     families: [
       { name: "Montserrat", weights: [300, 400, 500, 600, 700] },
       { name: "Inter", weights: [300, 400, 500, 600, 700] },
@@ -98,5 +112,12 @@ export default defineNuxtConfig({
   // 10. Тонкие настройки Nuxt (Features)
   features: {
     inlineStyles: false, // Отключает генерацию встроенных <style> тегов в HTML
+  },
+
+  image: {
+    provider: 'ipx', // Используем встроенный IPX provider
+    domains: ['https://alexdews.github.io'],
+    format: ['avif', 'webp', 'jpg'], // Явно указываем форматы
+    quality: 80,
   },
 });

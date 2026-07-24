@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+const { menuItems } = useMenu();
+</script>
 
 <template>
   <footer class="footer ptb">
@@ -24,52 +26,30 @@
             </RouterLink>
           </div>
           <nav class="nav footer__nav">
-            <RouterLink
-              to="/"
+            <NuxtLink
+              v-for="item in menuItems"
+              :key="item.id"
+              :to="item.href"
               class="nav__link"
-            >
-              Home
-            </RouterLink>
-            <RouterLink
-              to="/"
-              class="nav__link"
-            >
-              Services
-            </RouterLink>
-            <RouterLink
-              to="/"
-              class="nav__link"
-            >
-              Our Facility
-            </RouterLink>
-            <RouterLink
-              to="/"
-              class="nav__link"
-            >
-              About
-            </RouterLink>
-            <RouterLink
-              to="/"
-              class="nav__link"
-            >
-              Contact
-            </RouterLink>
+            >{{ item.label }}</NuxtLink>
           </nav>
         </div>
         <div class="footer__center"></div>
         <div class="footer__footer">
           <div class="footer__social">
             <a
-              href="/"
-              alt="X"
+              href="https://www.x.com/"
+              alt="social x"
               class="footer__icon"
+              aria-label="social x"
             >
               <svgo-x footer__x />
             </a>
             <a
-              href="/"
-              alt="YT"
+              href="https://www.youtube.com/"
+              alt="youtube"
               class="footer__icon"
+              aria-label="youtube"
             >
               <svgo-yt class="footer__yt" />
             </a>

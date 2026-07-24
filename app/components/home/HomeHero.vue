@@ -23,27 +23,53 @@ import { popupStore } from "@/components/modules/popup/popupStore";
       </div>
       <div class="hero__container">
         <div class="hero__content">
-          <div class="hero__title"><h1>Yoga First Fitness Always</h1></div>
+          <div class="hero__title">
+            <Animated
+              type="fade-up"
+              :delay="0.2"
+              :trigger="false"
+            >
+              <h1>Yoga First Fitness Always</h1>
+            </Animated>
+          </div>
           <div class="hero__subtitle">
-            <p>
-              Welcome to Great Fit Yoga and Fitness Center, where tradition meets innovation. Our experts guide you
-              through transformative yoga and fitness programs designed to strengthen your body and calm your mind.
-            </p>
+            <Animated
+              type="fade-up"
+              :delay="0.6"
+              :trigger="false"
+            >
+              <p>
+                Welcome to Great Fit Yoga and Fitness Center, where tradition meets innovation. Our experts guide you
+                through transformative yoga and fitness programs designed to strengthen your body and calm your mind.
+              </p>
+            </Animated>
           </div>
           <div class="hero__btn">
-            <AppButton
-              to="/"
-              class="hero__btn-link"
+            <Animated
+              type="scale-up"
+              :delay="1"
+              :trigger="false"
             >
-              Book A Session
-            </AppButton>
-            <AppButton
-              class="hero__btn-contacts"
-              @click="popupStore.open('callback')"
+              <AppButton
+                to="/"
+                class="hero__btn-link"
+              >
+                Book A Session
+              </AppButton>
+            </Animated>
+            <Animated
+              type="scale-up"
+              :delay="1.4"
+              :trigger="false"
             >
-              <span>Contact Us</span>
-              <svgo-arrow-nav class="hero__arrow" />
-            </AppButton>
+              <AppButton
+                class="hero__btn-contacts"
+                @click="popupStore.open('callback')"
+              >
+                <span>Contact Us</span>
+                <svgo-arrow-nav class="hero__arrow" />
+              </AppButton>
+            </Animated>
           </div>
         </div>
       </div>

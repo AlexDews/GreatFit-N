@@ -1,73 +1,58 @@
 <script setup>
-import { ref, onMounted } from "vue";
 import AppSwiper from "@/components/modules/swiper/AppSlider.vue";
 import AppButton from "@/components/ui/AppButton.vue";
 import AppTitle from "@/components/ui/AppTitle.vue";
 
-const swiperOptions = ref(null);
-
-onMounted(() => {
-  swiperOptions.value = {
-    loop: false,
-    autoplay: false,
-    slidesPerView: "auto",
-    spaceBetween: 50,
-    observer: true, // 💡 Важно для ресайза
-    observeParents: true, // 💡 Важно для ресайза
-    resizeObserver: true,
-    navigation: {
-      prevEl: ".services__btn--prev",
-      nextEl: ".services__btn--next",
-    },
-    breakpoints: {
-      320: { spaceBetween: 15, centeredSlides: true },
-      768: { spaceBetween: 24, centeredSlides: false },
-      992: { spaceBetween: 50, centeredSlides: false },
-    },
-    centeredSlides: false,
-  };
-});
+const swiperOptions = {
+  loop: false,
+  autoplay: false,
+  slidesPerView: "auto",
+  spaceBetween: 50,
+  observer: true, // 💡 Важно для ресайза
+  observeParents: true, // 💡 Важно для ресайза
+  resizeObserver: true,
+  navigation: {
+    prevEl: ".services__btn--prev",
+    nextEl: ".services__btn--next",
+  },
+  breakpoints: {
+    320: { spaceBetween: 15, centeredSlides: true },
+    768: { spaceBetween: 24, centeredSlides: false },
+    992: { spaceBetween: 50, centeredSlides: false },
+  },
+  centeredSlides: false,
+};
 
 const servicesList = [
   {
     icon: "spa",
     title: "Spa area",
-    text: "Indulge in a world of relaxation and rejuvenation with our exceptional spa services. At our LA center",
+    text: "Restore body and mind in our Spa Area. Enjoy saunas, hydrotherapy, and ultimate post-yoga relaxation.",
   },
   {
     icon: "room",
     title: "Changing Room",
-    text: "Indulge in a world of relaxation and rejuvenation with our exceptional spa services. At our LA center",
+    text: "Enjoy our clean, spacious changing rooms with secure lockers, fresh showers, and full amenities.",
   },
   {
     icon: "lessons",
     title: "Free Lessons",
-    text: "Indulge in a world of relaxation and rejuvenation with our exceptional spa services. At our LA center",
+    text: "Try our free yoga lessons to master basic postures, boost energy, and find your daily balance.",
   },
   {
     icon: "rug",
     title: "Free Rug",
-    text: "Indulge in a world of relaxation and rejuvenation with our exceptional spa services. At our LA center",
+    text: "Enjoy free yoga rug rental for every class to keep your practice comfortable, clean, and steady.",
+  },
+  {
+    icon: "room",
+    title: "Free Parking",
+    text: "Park your vehicle safely in our private lot with free, convenient, and easy access for guests.",
   },
   {
     icon: "spa",
-    title: "Spa area",
-    text: "Indulge in a world of relaxation and rejuvenation with our exceptional spa services. At our LA center",
-  },
-  {
-    icon: "room",
-    title: "Changing Room",
-    text: "Indulge in a world of relaxation and rejuvenation with our exceptional spa services. At our LA center",
-  },
-  {
-    icon: "lessons",
-    title: "Free Lessons",
-    text: "Indulge in a world of relaxation and rejuvenation with our exceptional spa services. At our LA center",
-  },
-  {
-    icon: "rug",
-    title: "Free Rug",
-    text: "Indulge in a world of relaxation and rejuvenation with our exceptional spa services. At our LA center",
+    title: "Personal Trainer",
+    text: "Achieve your fitness goals faster with personalized guidance from our certified yoga instructors.",
   },
 ];
 </script>
@@ -277,11 +262,13 @@ const servicesList = [
   // .card__btn
   &__btn {
     background-color: transparent;
-    box-shadow: inset 0 0 0 2px $colorAccent;
+    outline: 2px solid $colorAccent;
+    outline-offset: -2px;
     color: $colorAccent;
     font-weight: 600;
     line-height: math.div(18, 16);
     padding: 10px 16px;
+    border-radius: 10px;
 
     @media (any-hover: hover) {
       &:hover {
@@ -294,7 +281,7 @@ const servicesList = [
   // .card__btn--promo
   &__btn--promo {
     background-color: #fff;
-    box-shadow: none;
+    outline: none;
     padding: 16px 24px;
   }
 

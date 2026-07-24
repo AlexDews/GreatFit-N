@@ -6,11 +6,13 @@ import { burgerConfig } from "./config";
 import { gsap } from "gsap";
 
 const { isMenuOpen, toggleMenu, handleMenuClick } = useBurger();
+const { menuItems } = useMenu();
 
-const openSubmenu = ref<string | null>(null);
+// Используем ID вместо строк для универсальности
+const openSubmenuId = ref<number | null>(null);
 
-const toggleSubMenu = (menuName: string) => {
-  openSubmenu.value = openSubmenu.value === menuName ? null : menuName;
+const toggleSubMenu = (id: number) => {
+  openSubmenuId.value = openSubmenuId.value === id ? null : id;
 };
 
 //~--- Динамические стили для размеров меню (с дефолтами 100vw/vh) ---
@@ -84,7 +86,7 @@ watch(isMenuOpen, async (isOpen) => {
       );
     }
   } else {
-    openSubmenu.value = null;
+    openSubmenuId.value = null;
 
     const exitY = animType === "stagger-fade" ? -10 : 0;
     const exitX = animType === "stagger-slide" ? (burgerConfig.appearance.direction === "left" ? -15 : 15) : 0;
@@ -109,7 +111,7 @@ watch(isMenuOpen, async (isOpen) => {
     @click="toggleMenu"
   >
     <span></span>
-    <span></span>lazy 
+    <span></span>
     <span></span>
   </button>
 
@@ -126,125 +128,61 @@ watch(isMenuOpen, async (isOpen) => {
       :style="menuStyles"
     >
       <ul class="menu-list">
-        <li class="menu-item js-menu-item">
-          <NuxtLink
-            to="/"
-            @click="handleMenuClick"
-          >
-            Home
-          </NuxtLink>
-        </li>
-        <li class="menu-item js-menu-item menu-item--submenu">
-          <div class="menu-subbtn">
+        <li
+          v-for="item in menuItems"
+          :key="item.id"
+          class="menu-item js-menu-item"
+          :class="{ 'menu-item--submenu': item.children && item.children.length > 0 }"
+        >
+          <!-- ВАРИАНТ А: У пункта есть подменю -->
+          <template v-if="item.children && item.children.length > 0">
+            <div class="menu-subbtn">
+              <NuxtLink
+                :to="item.href"
+                @click="handleMenuClick"
+              >
+                {{ item.label }}
+              </NuxtLink>
+              <button
+                type="button"
+                class="menu-item__toggle"
+                aria-label="Open submenu"
+                :class="{ 'is-open': openSubmenuId === item.id }"
+                @click.stop="toggleSubMenu(item.id)"
+              >
+                <svgo-arrow-nav class="nav__icon" />
+              </button>
+            </div>
+
+            <AppAccordion :is-open="openSubmenuId === item.id">
+              <AppAnimator>
+                <ul class="mobile-submenu">
+                  <li
+                    v-for="child in item.children"
+                    :key="child.id"
+                    class="mobile-submenu__item"
+                  >
+                    <NuxtLink
+                      :to="child.href"
+                      @click="handleMenuClick"
+                    >
+                      {{ child.label }}
+                    </NuxtLink>
+                  </li>
+                </ul>
+              </AppAnimator>
+            </AppAccordion>
+          </template>
+
+          <!-- ВАРИАНТ Б: Обычная ссылка без подменю -->
+          <template v-else>
             <NuxtLink
-              to="/services"
+              :to="item.href"
               @click="handleMenuClick"
             >
-              Services
+              {{ item.label }}
             </NuxtLink>
-            <button
-              type="button"
-              class="menu-item__toggle"
-              aria-label="Open submenu"
-              :class="{ 'is-open': openSubmenu === 'services' }"
-              @click.stop="toggleSubMenu('services')"
-            >
-              <svgo-arrow-nav class="nav__icon" />
-            </button>
-          </div>
-          <AppAccordion :is-open="openSubmenu === 'services'">
-            <AppAnimator>
-              <ul class="mobile-submenu">
-                <li class="mobile-submenu__item">
-                  <NuxtLink to="/services/spa">Spa Area</NuxtLink>
-                </li>
-                <li class="mobile-submenu__item">
-                  <NuxtLink
-                    to="/services/changing-room"
-                    @click="handleMenuClick"
-                  >
-                    Changing Room
-                  </NuxtLink>
-                </li>
-                <li class="mobile-submenu__item">
-                  <NuxtLink
-                    to="/services/free-lessons"
-                    @click="handleMenuClick"
-                  >
-                    Free Lessons
-                  </NuxtLink>
-                </li>
-                <li class="mobile-submenu__item">
-                  <NuxtLink
-                    to="/services/free-rug"
-                    @click="handleMenuClick"
-                  >
-                    Free Rug
-                  </NuxtLink>
-                </li>
-              </ul>
-            </AppAnimator>
-          </AppAccordion>
-        </li>
-        <li class="menu-item js-menu-item menu-item--submenu">
-          <div class="menu-subbtn">
-            <NuxtLink
-              to="/facility"
-              @click="handleMenuClick"
-            >
-              Our Facility
-            </NuxtLink>
-            <button
-              type="button"
-              class="menu-item__toggle"
-              aria-label="Open submenu"
-              :class="{ 'is-open': openSubmenu === 'facility' }"
-              @click.stop="toggleSubMenu('facility')"
-            >
-              <svgo-arrow-nav class="nav__icon" />
-            </button>
-          </div>
-          <AppAccordion :is-open="openSubmenu === 'facility'">
-            <AppAnimator>
-              <ul class="mobile-submenu">
-                <li class="mobile-submenu__item">
-                  <NuxtLink to="/services/spa">Beginners Yoga</NuxtLink>
-                </li>
-                <li class="mobile-submenu__item">
-                  <NuxtLink
-                    to="/services/changing-room"
-                    @click="handleMenuClick"
-                  >
-                    Stretching
-                  </NuxtLink>
-                </li>
-                <li class="mobile-submenu__item">
-                  <NuxtLink
-                    to="/services/free-lessons"
-                    @click="handleMenuClick"
-                  >
-                    Fly-Yoga
-                  </NuxtLink>
-                </li>
-              </ul>
-            </AppAnimator>
-          </AppAccordion>
-        </li>
-        <li class="menu-item js-menu-item">
-          <NuxtLink
-            to="/about"
-            @click="handleMenuClick"
-          >
-            About
-          </NuxtLink>
-        </li>
-        <li class="menu-item js-menu-item">
-          <NuxtLink
-            to="/contact"
-            @click="handleMenuClick"
-          >
-            Contact
-          </NuxtLink>
+          </template>
         </li>
       </ul>
     </nav>
@@ -312,7 +250,7 @@ watch(isMenuOpen, async (isOpen) => {
   height: var(--menu-height);
   display: flex;
   justify-content: center;
-  overflow-y: auto; 
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding: 70px 0;
 
@@ -368,6 +306,7 @@ watch(isMenuOpen, async (isOpen) => {
   align-items: center;
 
   &__toggle {
+    padding: 0 5px;
     .nav__icon {
       transition: transform 0.3s ease 0s;
       pointer-events: none;

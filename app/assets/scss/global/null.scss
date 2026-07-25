@@ -1,30 +1,23 @@
+// app\assets\scss\global\null.scss
 @use "sass:math";
 
-* {
+/* 1. Глобальный сброс отступов и box-sizing */
+:where(*, *::before, *::after) {
   padding: 0;
   margin: 0;
   border: 0;
-}
-
-*,
-*::before,
-*::after {
   box-sizing: border-box;
 }
 
-:focus,
-:active {
+/* 2. Состояния фокуса и активности */
+:where(:focus, :active, a:focus, a:active) {
   outline: none;
 }
 
-a:focus,
-a:active {
-  outline: none;
-}
-
+/* 3. Базовые настройки страницы */
 html,
 body {
-  min-width: $minWidth + px;
+  min-width: var(--min-width);
 }
 
 body {
@@ -35,50 +28,48 @@ body {
   text-size-adjust: 100%;
 }
 
-input,
-button,
-textarea {
-  font-family: $fontFamily;
+// Блокировка скролла
+html.lock {
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
+/* 4. Формы и кнопки */
+:where(input, button, textarea, select) {
+  font-family: var(--font-family);
   font-size: inherit;
 }
 
-button {
+:where(button) {
   cursor: pointer;
   color: inherit;
-  background-color: inherit;
+  background-color: transparent;
 }
 
-a {
+/* 5. Ссылки */
+:where(a, a:link, a:visited, a:hover) {
   color: inherit;
-}
-
-a:link,
-a:visited {
   text-decoration: none;
 }
 
-a:hover {
-  text-decoration: none;
-}
-
-ul li {
+/* 6. Списки */
+:where(ul, ol, li) {
   list-style: none;
 }
 
-img {
+/* 7. Медиа */
+:where(img, svg, video) {
   vertical-align: top;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+/* 8. Заголовки */
+:where(h1, h2, h3, h4, h5, h6) {
   font-weight: inherit;
   font-size: inherit;
 }
 
-address {
+/* 9. Прочее */
+:where(address) {
   font-style: normal;
 }

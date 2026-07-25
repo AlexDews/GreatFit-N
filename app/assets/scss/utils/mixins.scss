@@ -1,3 +1,4 @@
+// app\assets\scss\utils\mixins.scss
 // Обязательно для современного Sass
 @use "sass:math";
 @use "sass:string";
@@ -57,7 +58,7 @@
 }
 
 // ~ Grids (сетка карточек)
-@mixin gridCards($type: fit, $min: 280px, $max: 1fr, $gap: 30px) {
+@mixin gridCards($type: fit, $min: var(--grid-min, 280px), $max: 1fr, $gap: var(--grid-gap, 30px)) {
   display: grid;
   gap: $gap;
   grid-template-columns: repeat(auto-#{$type}, minmax($min, $max));

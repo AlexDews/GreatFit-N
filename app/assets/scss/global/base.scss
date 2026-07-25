@@ -1,55 +1,27 @@
-// Отзывчивая сетка / Контейнеры
+// app\assets\scss\global\base.scss
 @use "sass:math";
 
+// 1. Сетка и контейнеры
 @if $responsiveType == 1 {
   [class*="__container"] {
     @if $maxWidthContainer > 0 {
-      max-width: $maxWidthContainer + px;
+      max-width: var(--max-width-container);
       box-sizing: content-box;
       margin: 0 auto;
     }
 
     @if $containerPadding > 0 {
       @if $maxWidthContainer > 0 {
-        padding: 0 (math.div($containerPadding, 2) * 1px);
+        padding: 0 calc(var(--container-padding) / 2);
       } @else {
         @include adaptiveValue("padding-left", (math.div($containerPadding, 2)), 15);
         @include adaptiveValue("padding-right", (math.div($containerPadding, 2)), 15);
       }
     }
   }
-} @else {
-  [class*="__container"] {
-    margin: 0 auto;
-
-    @if $maxWidthContainer > 0 {
-      max-width: $maxWidthContainer + px;
-      box-sizing: content-box;
-    } @else {
-      @if $containerPadding > 0 {
-        padding: 0 (math.div($containerPadding, 2) * 1px);
-      }
-    }
-
-    @media (max-width: $pc) {
-      max-width: 970px;
-    }
-
-    @media (max-width: $tablet) {
-      max-width: 750px;
-    }
-
-    @media (max-width: $mobile) {
-      max-width: none;
-
-      @if $containerPadding > 0 and $maxWidthContainer > 0 {
-        padding: 0 (math.div($containerPadding, 2) * 1px);
-      }
-    }
-  }
 }
 
-// Стили для отзывчивых картинок (IBG)
+// 2. Изображения (IBG)
 [class*="-ibg"] {
   position: relative;
 
@@ -57,108 +29,31 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    top: 0;
-    left: 0;
+    inset: 0;
     object-fit: cover;
   }
 }
 
-[class*="-ibg_contain"] {
-  img {
-    object-fit: contain;
-  }
+[class*="-ibg_contain"] img {
+  object-fit: contain;
 }
 
-// Шаблоны (заготовки)
-%listCounter {
-  list-style-type: none;
-  counter-reset: item;
-
-  li {
-    position: relative;
-
-    &::before {
-      counter-increment: item;
-      content: counter(item);
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
-  }
-}
-
-%responsiveVideo {
-  position: relative;
-  overflow: hidden;
-  height: 0;
-  padding-bottom: 56.25%;
-
-  video,
-  iframe,
-  object,
-  embed {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-}
-
-%videoBackground {
-  video,
-  iframe,
-  object,
-  embed {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    z-index: -100;
-    transform: translateX(-50%) translateY(-50%);
-    background-size: cover;
-  }
-}
-
-%grayfilter {
-  transition: all 0.3s ease 0s;
-  filter: grayscale(1);
-
-  @media (any-hover: hover) {
-    &:hover {
-      filter: grayscale(0);
-    }
-  }
-}
-
-%noselect {
-  user-select: none;
-}
+// 3. Сокращение scrollbar
 %hidescroll {
+  scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
   }
 }
 
-// Системные классы Vue / Анимации / Попапы
+%grayfilter {
+  transition: filter 0.3s ease;
+  filter: grayscale(100%);
 
-html.lock {
-  touch-action: none;
-  overscroll-behavior: none;
-}
-
-html.lock body {
-  touch-action: none;
-  overscroll-behavior: none;
-}
-
-[data-spoller] {
-  cursor: pointer;
-}
-
-.nuxt-devtools-container {
-  display: none;
+  @media (hover: hover) {
+    // Чистый современный медиа-запрос
+    &:hover {
+      filter: grayscale(0%);
+    }
+  }
 }

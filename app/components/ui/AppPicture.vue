@@ -51,7 +51,7 @@ const imgOptions = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-.app-picture {
+:where(.app-picture) {
   display: contents;
 
   img {

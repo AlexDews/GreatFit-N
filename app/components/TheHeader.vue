@@ -48,6 +48,7 @@
           <Animated
             type="fade-left"
             :delay="1.2"
+            class="header__btn--body"
           >
             <AppButton
               to="/"
@@ -119,7 +120,7 @@
   &__nav {
   }
 
-  & .header__btn {
+  &__btn {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -188,7 +189,9 @@
 
 @media (max-width: $tablet) {
   .header__nav,
-  .header__btn {
+  .header__btn,
+  .header__btn--body {
+    opacity: 0;
     display: none;
   }
 }

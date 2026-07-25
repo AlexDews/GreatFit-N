@@ -15,11 +15,15 @@ defineProps({
     type: String,
     default: "",
   },
+  type: {
+    type: String,
+    default: "button", // По умолчанию 'button', чтобы форма случайно не отправлялась
+  },
 });
 </script>
 
 <style lang="scss" scoped>
-.ui-btn {
+:where(.ui-btn) {
   display: inline-flex;
   justify-content: center;
   align-items: center;

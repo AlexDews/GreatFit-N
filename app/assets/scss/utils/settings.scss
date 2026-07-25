@@ -1,36 +1,53 @@
-// Обязательно для 2026 года
+// app\assets\scss\utils\settings.scss
 @use "sass:math";
 
-// ==================== ПЕРЕМЕННЫЕ ====================
-$fontFamily: "Inter", sans-serif;
-$colorBg: #fff;
-$colorAccent: #485c46;
-$fontColor: #343a40;
-$fontMainColor: #495057;
-$fontSize: 16px;
+// ==================== 1. SASS ПЕРЕМЕННЫЕ (Константы и математика) ====================
+// Ширина экрана (для JS и SCSS)
 
-// Минимальная ширина страницы
 $minWidth: 320;
-
-// Ширина полотна (макета)
 $maxWidth: 1920;
-
-// Ширина ограничивающего контейнера
 $maxWidthContainer: 1320;
-
-// Общий отступ у контейнера
 $containerPadding: 30;
 
-// Ширина срабатывания первого брейкпоинта
+// Расчет ширины контейнера
 $containerWidth: $maxWidthContainer + $containerPadding;
 
-// Брейк-поинты в px (добавлены единицы измерения для корректной работы @media)
+// Брейк-поинты в px (для @media запросов в SCSS)
 $pc: $containerWidth * 1px;
-$tablet: 991.98 * 1px;
-$mobile: 767.98 * 1px;
-$mobileSmall: 479.98 * 1px;
-
-// Тип адаптива:
-// 1 = отзывчивость (у контейнера нет брейкпоинтов),
-// 2 = по брейк-поинтам (контейнер меняет свою ширину по брейк-поинтам)
+$tablet: 991.98px;
+$mobile: 767.98px;
+$mobileSmall: 479.98px;
 $responsiveType: 1;
+
+// ==================== 2. CSS-ПЕРЕМЕННЫЕ (Для темы, JS и стилей) ====================
+:root {
+  // Цвета и шрифты
+  --font-family: "Inter", sans-serif;
+  --color-bg: #fff;
+  --color-accent: #485c46;
+  --font-color: #343a40;
+  --font-main-color: #495057;
+  --font-size: 16px;
+
+  // Размеры
+  --min-width: #{$minWidth}px;
+  --max-width: #{$maxWidth}px;
+  --max-width-container: #{$maxWidthContainer}px;
+  --container-padding: #{$containerPadding}px;
+  --container-width: #{$containerWidth}px;
+
+  // Брейкпоинты для использования в CSS/JS
+  --pc: #{$pc};
+  --tablet: #{$tablet};
+  --mobile: #{$mobile};
+  --mobile-small: #{$mobileSmall};
+}
+
+// ==================== 3. SASS-АЛИАСЫ (Для старого кода) ====================
+
+$fontFamily: var(--font-family);
+$colorBg: var(--color-bg);
+$colorAccent: var(--color-accent);
+$fontColor: var(--font-color);
+$fontMainColor: var(--font-main-color);
+$fontSize: var(--font-size);

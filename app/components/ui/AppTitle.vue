@@ -12,7 +12,10 @@ defineProps({
 </script>
 
 <template>
-  <div class="app-title" data-animate="fade-left">
+  <div
+    class="app-title"
+    data-animate="fade-left"
+  >
     <h2 class="app-title__main">{{ title }}</h2>
     <p
       v-if="subtitle"
@@ -25,23 +28,29 @@ defineProps({
 
 <style lang="scss" scoped>
 .app-title {
+  &:where(&) {
     display: flex;
     align-items: center;
     flex-direction: column;
     margin-bottom: 48px;
+  }
 
   // .app-title__main
   &__main {
-    font-weight: 700;
-    font-size: 52px;
-    color: $fontColor;
+    &:where(&) {
+      font-weight: 700;
+      font-size: 52px;
+      color: $fontColor;
+    }
   }
 
   // .app-title__sub
   &__sub {
-    font-weight: 500;
-    font-size: 20px;
-    color: #000;
+    &:where(&) {
+      font-weight: 500;
+      font-size: 20px;
+      color: #000;
+    }
   }
 }
 </style>

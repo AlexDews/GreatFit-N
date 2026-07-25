@@ -115,7 +115,7 @@ export default defineNuxtConfig({
   },
 
   image: {
-    provider: "ipx", // Используем встроенный IPX provider
+    provider: "vercel", // Используем встроенный IPX provider
     format: ["avif", "webp", "jpg"], // Явно указываем форматы
     quality: 80,
   },

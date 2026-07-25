@@ -1,3 +1,4 @@
+<!-- app\components\ui\AppButton.vue -->
 <template>
   <component
     :is="to ? 'NuxtLink' : 'button'"

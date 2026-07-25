@@ -119,7 +119,7 @@
   &__nav {
   }
 
-  &__btn {
+  & .header__btn {
     display: flex;
     align-items: center;
     gap: 8px;

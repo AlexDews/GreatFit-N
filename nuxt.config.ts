@@ -10,10 +10,14 @@ export default defineNuxtConfig({
 
   // 3. Мета-данные приложения и Фавиконки
   app: {
-    baseURL: import.meta.env.NUXT_PUBLIC_BASE_URL || "/GreatFit-N/",
+    baseURL: import.meta.env.NUXT_PUBLIC_BASE_URL || "/",
     head: {
-      title: "Great Fit Yoga Studio",
-      meta: [{ charset: "utf-8" }, { name: "viewport", content: "width=device-width, initial-scale=1" }, { name: "theme-color", content: "#1e3d2f" }],
+      title: "Great Fit - Yoga Studio",
+      meta: [
+        { charset: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { name: "theme-color", content: "#1e3d2f" },
+      ],
       link: [
         { rel: "icon", type: "image/x-icon", href: "favicons/favicon.ico" },
         { rel: "icon", type: "image/svg+xml", href: "favicons/favicon.svg" },
@@ -25,10 +29,6 @@ export default defineNuxtConfig({
   ssr: true,
 
   nitro: {
-    prerender: {
-      failOnError: false, // Игнорировать ошибки пререндера
-      routes: ["/"],
-    },
   },
 
   // 4. Шрифты (@nuxt/fonts)
@@ -115,9 +115,8 @@ export default defineNuxtConfig({
   },
 
   image: {
-    provider: 'ipx', // Используем встроенный IPX provider
-    domains: ['https://alexdews.github.io'],
-    format: ['avif', 'webp', 'jpg'], // Явно указываем форматы
+    provider: "ipx", // Используем встроенный IPX provider
+    format: ["avif", "webp", "jpg"], // Явно указываем форматы
     quality: 80,
   },
 });

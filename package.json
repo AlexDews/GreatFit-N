@@ -11,7 +11,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "prepare": "husky",
-    "lint": "eslint . && stylelint \"app/assets/scss/**/*.scss\" \"app/**/*.vue\"",
+    "lint": "eslint . && stylelint \"app/assets/scss/**/*.scss\" \"app/**/*.vue\" --allow-empty-input",
     "lint:fix": "eslint . --fix && stylelint \"app/assets/scss/**/*.scss\" \"app/**/*.vue\" --fix"
   },
   "dependencies": {

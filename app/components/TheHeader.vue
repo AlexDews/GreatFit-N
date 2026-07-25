@@ -48,7 +48,6 @@
           <Animated
             type="fade-left"
             :delay="1.2"
-            :trigger="false"
           >
             <AppButton
               to="/"

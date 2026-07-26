@@ -17,7 +17,12 @@ $pc: $containerWidth * 1px;
 $tablet: 991.98px;
 $mobile: 767.98px;
 $mobileSmall: 479.98px;
-$responsiveType: 1;
+
+// Адаптивность, резиновая - true или по брейкпоинтам - false
+$isResponsive: true;
+
+// Тип верстки Mobile-first - true или Desktop-first - false
+$isMobileFirst: false;
 
 // ==================== 2. CSS-ПЕРЕМЕННЫЕ (Для темы, JS и стилей) ====================
 :root {

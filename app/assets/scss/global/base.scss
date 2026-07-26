@@ -2,7 +2,7 @@
 @use "sass:math";
 
 // 1. Сетка и контейнеры
-@if $responsiveType == 1 {
+@if $isResponsive {
   [class*="__container"] {
     @if $maxWidthContainer > 0 {
       max-width: var(--max-width-container);

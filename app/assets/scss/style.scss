@@ -7,12 +7,12 @@
 body {
   display: flex;
   flex-direction: column;
-  font-size: $fontSize;
-  background-color: $colorBg;
-  color: $fontColor;
+  font-size: var(--font-size);
+  background-color: var(--color-bg);
+  color: var(--font-color);
   position: relative;
   overflow-x: hidden;
-  font-family: $fontFamily;
+  font-family: var(--font-family);
 }
 
 .main {

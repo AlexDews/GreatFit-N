@@ -1,14 +1,94 @@
-// app\assets\scss\utils\mixins.scss
-// Обязательно для современного Sass
+// app/assets/scss/utils/mixins.scss
 @use "sass:math";
-@use "sass:string";
 
-// Миксин для AVIF/WEBP (Адаптирован под Vue Scoped Styles)
-@mixin bg($url, $ext, $url2x: null, $ext2x: null) {
-  // ~ --- 1x Базовый (Fallback) ---
+// ============================================================================
+// 1. УНИВЕРСАЛЬНЫЙ МЕДИА-МИКСИН (Учитывает $isMobileFirst)
+// ============================================================================
+/// Автоматически меняет min-width / max-width в зависимости от настройки $isMobileFirst
+/// @param {Number} $breakpoint - Точка останова (например, $tablet или 991.98px)
+@mixin media($breakpoint) {
+  @if $isMobileFirst {
+    @media (min-width: $breakpoint) {
+      @content;
+    }
+  } @else {
+    @media (max-width: $breakpoint) {
+      @content;
+    }
+  }
+}
+
+// ============================================================================
+// 2. АДАПТИВНОЕ ЗНАЧЕНИЕ (clamp)
+// ============================================================================
+/// Плавно масштабирует значение свойства от $startSize до $minSize
+/// Автоматически меняет направление отсчёта при $isMobileFirst: true
+/// @param {String} $property - CSS свойство (font-size, padding-top и т.д.)
+/// @param {Number} $startSize - Стартовый размер (в px или без единиц)
+/// @param {Number} $minSize - Минимальный размер (в px или без единиц)
+/// @param {Number} $widthFrom - Верхний брейкпоинт (по умолчанию зависит от $isMobileFirst)
+/// @param {Number} $widthTo - Нижний брейкпоинт (по умолчанию зависит от $isMobileFirst)
+@mixin adaptiveValue($property, $startSize, $minSize, $widthFrom: $containerWidth, $widthTo: $minWidth, $keepSize: 0) {
+  $wFrom: $widthFrom;
+  $wTo: $widthTo;
+
+  @if $isMobileFirst {
+    $wFrom: $minWidth;
+    $wTo: $containerWidth;
+  }
+
+  $start: $startSize;
+
+  @if not math.is-unitless($startSize) {
+    $start: math.div($startSize, 1px);
+  }
+
+  $min: $minSize;
+
+  @if not math.is-unitless($minSize) {
+    $min: math.div($minSize, 1px);
+  }
+
+  $wf: $wFrom;
+
+  @if not math.is-unitless($wFrom) {
+    $wf: math.div($wFrom, 1px);
+  }
+
+  $wt: $wTo;
+
+  @if not math.is-unitless($wTo) {
+    $wt: math.div($wTo, 1px);
+  }
+
+  $slope: math.div(($start - $min), ($wf - $wt));
+  $yIntersection: -$wt * $slope + $min;
+
+  // Формируем значения в px (px добавятся автоматически, а PostCSS их подхватит)
+  $yIntersectionPx: #{$yIntersection}px;
+  $flyValue: "#{$yIntersectionPx} + #{$slope * 100}vw";
+
+  #{$property}: clamp(#{$min}px, calc(#{$flyValue}), #{$start}px);
+}
+
+// ============================================================================
+// 3. СЕТКА КАРТОЧЕК (CSS Grid Auto-Fit/Auto-Fill)
+// ============================================================================
+@mixin gridCards($type: fit, $min: var(--grid-min, 280px), $max: 1fr, $gap: var(--grid-gap, 30px)) {
+  display: grid;
+  gap: $gap;
+  grid-template-columns: repeat(auto-#{$type}, minmax($min, $max));
+}
+
+// ============================================================================
+// 4. ФОНОВЫЕ ИЗОБРАЖЕНИЯ (AVIF / WebP / Retina)
+// ============================================================================
+/// Адаптирован под Vue Scoped Styles с фолбеками и поддержкой Retina
+@mixin bg($url, $ext: "jpg", $url2x: null, $ext2x: null) {
+  // 1x Базовый фолбек
   background-image: url("#{$url}.#{$ext}");
 
-  // ~ --- 1x WebP/AVIF (:global спасает от scoped-изоляции во Vue) ---
+  // Modern WebP / AVIF через глобальные классы сборщика
   :global(.webp) & {
     background-image: url("#{$url}.webp");
   }
@@ -17,13 +97,17 @@
     background-image: url("#{$url}.avif");
   }
 
-  // ~ --- 2x (Retina) ---
+  // Retina (2x)
   @if $url2x {
-    @media (resolution >= 2dppx), (resolution >= 192dpi) {
-      // 2x Базовый (Fallback)
-      background-image: url("#{$url2x}.#{$ext2x}");
+    $fileExt: $ext;
 
-      // 2x WebP/AVIF
+    @if $ext2x {
+      $fileExt: $ext2x;
+    }
+
+    @media (resolution >= 2dppx), (resolution >= 192dpi) {
+      background-image: url("#{$url2x}.#{$fileExt}");
+
       :global(.webp) & {
         background-image: url("#{$url2x}.webp");
       }
@@ -35,63 +119,26 @@
   }
 }
 
-// ~ Миксин для быстрого использования иконок
+// ============================================================================
+// 5. ВСПОМОГАТЕЛЬНЫЕ МИКСИНЫ И ФУНКЦИИ
+// ============================================================================
+
+// Быстрый расчет процентов
+@function percent($px, $from) {
+  @return math.div($px, $from) * 100%;
+}
+
+// Иконки из шрифта
 @mixin icon($char) {
   font-family: $font-icons;
-  content: $char;
+  content: "#{$char}";
   display: inline-block;
   speak: none;
 }
 
-// ~ Percent (расчет процентов)
-@function percent($px, $from) {
-  $result: math.div($px, $from) * 100%;
-
-  @return $result;
-}
-
-// ~ Currency (добавление символа валюты)
-@mixin currency($sym) {
+// Псевдоэлемент с символом валюты
+@mixin currency($sym: "₽") {
   &::after {
     content: "#{$sym}";
-  }
-}
-
-// ~ Grids (сетка карточек)
-@mixin gridCards($type: fit, $min: var(--grid-min, 280px), $max: 1fr, $gap: var(--grid-gap, 30px)) {
-  display: grid;
-  gap: $gap;
-  grid-template-columns: repeat(auto-#{$type}, minmax($min, $max));
-}
-
-// ~ Адаптивное значение (clamp + media queries)
-@mixin adaptiveValue($property, $startSize, $minSize, $widthFrom: $containerWidth, $widthTo: $minWidth, $keepSize: 0) {
-  // 1. Приведение к числам (удаление px)
-  $startSize: math.div($startSize, ($startSize * 0 + 1));
-  $minSize: math.div($minSize, ($minSize * 0 + 1));
-  $widthFrom: math.div($widthFrom, ($widthFrom * 0 + 1));
-  $widthTo: math.div($widthTo, ($widthTo * 0 + 1));
-
-  @if $startSize == $minSize {
-    #{$property}: #{$startSize}px;
-  } @else {
-    @if $widthFrom == $containerWidth and $maxWidthContainer == 0 {
-      $widthFrom: $maxWidth;
-    }
-
-    // Математический расчет наклонной
-    $slope: math.div(($startSize - $minSize), ($widthFrom - $widthTo));
-    $yIntersection: -$widthTo * $slope + $minSize;
-
-    // Формируем внутреннюю часть calc с пробелами
-    $flyValue: "calc(#{$yIntersection}px + #{$slope * 100}vw)";
-
-    // Выводим ТОЛЬКО чистое свойство через интерполяцию строки.
-    // Браузер сам отсечет верх и низ, медиа-запросы не нужны!
-    @if $startSize > $minSize {
-      #{$property}: #{string.unquote("clamp(#{$minSize}px, #{$flyValue}, #{$startSize}px)")};
-    } @else {
-      #{$property}: #{string.unquote("clamp(#{$startSize}px, #{$flyValue}, #{$minSize}px)")};
-    }
   }
 }

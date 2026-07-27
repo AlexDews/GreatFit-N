@@ -12,9 +12,12 @@ defineProps({
 </script>
 
 <template>
-  <div
+  <Animated
+    type="fade-right"
+    :delay="0.2"
+    :trigger="true"
+    stagger="0.2"
     class="app-title"
-    data-animate="fade-left"
   >
     <h2 class="app-title__main">{{ title }}</h2>
     <p
@@ -23,7 +26,7 @@ defineProps({
     >
       {{ subtitle }}
     </p>
-  </div>
+  </Animated>
 </template>
 
 <style lang="scss" scoped>

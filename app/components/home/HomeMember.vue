@@ -17,6 +17,10 @@ import { popupStore } from "@/components/modules/popup/popupStore";
       </div>
 
       <div class="member__body">
+        <Animated
+          type="fade-up"
+          :stagger="0.1"
+        >
         <h2 class="member__title">Free 30 Day MemberShip</h2>
         <p class="member__text">
           Enjoy a complimentary 30-day free trial of our yoga and fitness classes. Experience our serene studio, expert
@@ -39,6 +43,7 @@ import { popupStore } from "@/components/modules/popup/popupStore";
             <svgo-arrow-nav class="member__arrow" />
           </AppButton>
         </div>
+        </Animated>
       </div>
     </div>
   </section>

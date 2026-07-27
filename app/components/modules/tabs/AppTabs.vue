@@ -1,5 +1,6 @@
+<!-- app\components\modules\tabs\AppTabs.vue -->
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { tabsConfig } from "~/components/modules/tabs/config";
 
 interface TabItem {
@@ -26,15 +27,9 @@ const props = withDefaults(
 const tabsRef = ref<HTMLElement | null>(null);
 const activeIndex = ref<number | null>(0);
 const isMobile = ref(false);
-const currentMinHeight = ref<string>(""); // Временная фиксация высоты при смене табов
 
 const { goToBlock } = useGoToBlock();
 let mediaQueryList: MediaQueryList | null = null;
-
-// Динамические стили для удержания высоты в момент анимации
-const tabsStyle = computed(() => {
-  return currentMinHeight.value ? { minHeight: currentMinHeight.value } : {};
-});
 
 const selectTab = (index: number) => {
   if (isMobile.value && activeIndex.value === index) {
@@ -48,8 +43,6 @@ const selectTab = (index: number) => {
   }
 
   if (tabsRef.value) {
-    currentMinHeight.value = `${tabsRef.value.offsetHeight}px`;
-
     const rect = tabsRef.value.getBoundingClientRect();
 
     if (rect.top < 0) {
@@ -68,6 +61,7 @@ const selectTab = (index: number) => {
     window.location.hash = `tab-${props.id}-${index}`;
   }
 };
+
 const checkHash = () => {
   if (!import.meta.client) return;
   const hash = window.location.hash;
@@ -81,52 +75,6 @@ const checkHash = () => {
 
 const handleMediaChange = (e: MediaQueryListEvent) => {
   isMobile.value = e.matches;
-};
-
-/* --- Анимационные хуки --- */
-const beforeEnter = (el: Element) => {
-  if (!tabsConfig.animate) return;
-  const htmlEl = el as HTMLElement;
-  htmlEl.style.height = "0";
-  htmlEl.style.overflow = "hidden";
-  htmlEl.style.transition = `height ${tabsConfig.speed}ms ease`;
-};
-
-const enter = (el: Element) => {
-  if (!tabsConfig.animate) return;
-  const htmlEl = el as HTMLElement;
-  htmlEl.style.height = `${htmlEl.scrollHeight}px`;
-};
-
-const afterEnter = (el: Element) => {
-  const htmlEl = el as HTMLElement;
-  htmlEl.style.height = "";
-  htmlEl.style.overflow = "";
-
-  // Контент нового таба полностью отрисовался — отпускаем фиксацию высоты
-  currentMinHeight.value = "";
-};
-
-const beforeLeave = (el: Element) => {
-  if (!tabsConfig.animate) return;
-  const htmlEl = el as HTMLElement;
-  htmlEl.style.height = `${htmlEl.offsetHeight}px`;
-  htmlEl.style.overflow = "hidden";
-  htmlEl.style.transition = `height ${tabsConfig.speed}ms ease`;
-};
-
-const leave = (el: Element) => {
-  if (!tabsConfig.animate) return;
-  const htmlEl = el as HTMLElement;
-  requestAnimationFrame(() => {
-    htmlEl.style.height = "0";
-  });
-};
-
-const afterLeave = (el: Element) => {
-  const htmlEl = el as HTMLElement;
-  htmlEl.style.height = "";
-  htmlEl.style.overflow = "";
 };
 
 onMounted(() => {
@@ -152,7 +100,6 @@ onUnmounted(() => {
     ref="tabsRef"
     class="ln-tabs"
     :class="{ '_tab-spoller': isMobile }"
-    :style="tabsStyle"
   >
     <div
       v-if="!isMobile"
@@ -187,29 +134,20 @@ onUnmounted(() => {
           {{ item.title }}
         </button>
 
-        <Transition
-          mode="out-in"
-          @before-enter="beforeEnter"
-          @enter="enter"
-          @after-enter="afterEnter"
-          @before-leave="beforeLeave"
-          @leave="leave"
-          @after-leave="afterLeave"
+        <div
+          v-show="activeIndex === index"
+          class="ln-tabs__content-wrapper"
         >
-          <div
-            v-show="activeIndex === index"
-            class="ln-tabs__content-wrapper"
-          >
-            <div class="ln-tabs__content">
-              <slot
-                :name="'content-' + index"
-                :item="item"
-              >
-                {{ item.content }}
-              </slot>
-            </div>
+          <div class="ln-tabs__content">
+            <slot
+              :name="'content-' + index"
+              :item="item"
+              :active-index="activeIndex"
+            >
+              {{ item.content }}
+            </slot>
           </div>
-        </Transition>
+        </div>
       </div>
     </div>
   </div>
@@ -218,7 +156,6 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .ln-tabs {
   width: 100%;
-  will-change: min-height;
 }
 .ln-tabs__titles {
   display: flex;

@@ -130,56 +130,87 @@ const classItems = [
         title="Latest Classes"
         subtitle="Sub heading to explain more"
       />
-      <div class="classes__tabs">
-        <AppTabs
-          id="yoga"
-          :items="classItems"
-          class-tab="classes__tab"
-          class-titles="classes__titles"
-        >
-          <template
-            v-for="(item, index) in classItems"
-            :key="item.id || index"
-            #[`content-${index}`]
+      <Animated
+        type="fade-up"
+        :delay="0.3"
+      >
+        <div class="classes__tabs">
+          <AppTabs
+            id="yoga"
+            :items="classItems"
+            class-tab="classes__tab"
+            class-titles="classes__titles"
           >
-            <div class="classes__content">
-              <div class="classes__item">
-                <div class="classes__image">
-                  <AppPicture
-                    class="classes__img"
-                    desktop-src="/images/home/tabs-1.jpg"
-                    alt="Classes Image"
-                    format="avif"
-                    quality="90"
-                    :lazy="true"
-                  />
-                </div>
-                <div class="classes__info">
-                  <h3 class="classes__info-title">{{ item.title }}</h3>
-                  <p class="classes__info-text">{{ item.text }}</p>
-                  <div class="classes__features">
-                    <div
-                      v-for="(feat, fIndex) in item.features"
-                      :key="fIndex"
-                      class="classes__feature"
+            <template
+              v-for="(item, index) in classItems"
+              :key="item.id || index"
+              #[`content-${index}`]="{ activeIndex }"
+            >
+              <TabTransition>
+                <div
+                  v-if="activeIndex === index"
+                  :key="index"
+                  class="classes__content"
+                >
+                  <div class="classes__item">
+                    <Animated
+                      type="fade-right"
+                      :duration="0.8"
+                      :trigger="false"
+                      class="classes__image"
                     >
-                      <span class="classes__feature-num">{{ fIndex + 1 }}</span>
-                      <span class="classes__feature-name">{{ feat.name }}</span>
-                      <span class="classes__feature-text">{{ feat.text }}</span>
+                      <AppPicture
+                        class="classes__img"
+                        desktop-src="/images/home/tabs-1.jpg"
+                        alt="Classes Image"
+                        format="avif"
+                        quality="90"
+                        :lazy="true"
+                      />
+                    </Animated>
+                    <div class="classes__info">
+                      <Animated
+                        type="fade-up"
+                        :duration="0.5"
+                        :delay="0.1"
+                        :trigger="false"
+                      >
+                        <h3 class="classes__info-title">{{ item.title }}</h3>
+                        <p class="classes__info-text">{{ item.text }}</p>
+                      </Animated>
+                      <Animated
+                        :key="`features-${activeIndex}`"
+                        type="zoom-in"
+                        :duration="0.4"
+                        :delay="0.2"
+                        :stagger="0.2"
+                        :trigger="false"
+                        class="classes__features"
+                      >
+                        <div
+                          v-for="(feat, fIndex) in item.features"
+                          :key="fIndex"
+                          class="classes__feature"
+                        >
+                          <span class="classes__feature-num">{{ fIndex + 1 }}</span>
+                          <span class="classes__feature-name">{{ feat.name }}</span>
+                          <span class="classes__feature-text">{{ feat.text }}</span>
+                        </div>
+                      </Animated>
                     </div>
                   </div>
+                  <AppButton
+                    to="/"
+                    class="classes__btn-link"
+                  >
+                    Get Your Free Trial
+                  </AppButton>
                 </div>
-              </div>
-              <AppButton
-                to="/"
-                class="classes__btn-link"
-              >
-                Get Your Free Trial
-              </AppButton>
-            </div>
-          </template>
-        </AppTabs>
-      </div>
+              </TabTransition>
+            </template>
+          </AppTabs>
+        </div>
+      </Animated>
     </div>
   </section>
 </template>

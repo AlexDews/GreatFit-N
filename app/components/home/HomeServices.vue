@@ -65,21 +65,26 @@ const servicesList = [
         subtitle="Sub heading to explain more"
       />
       <div class="services__slider">
-        <div class="swiper-slide services__slide--promo">
-          <div class="services__card card">
-            <h4 class="card__title">Get Started With Your Free Trial</h4>
-            <p class="card__text">
-              Explore yoga at our serene studio with a complimentary session. Meet our instructors and discover the
-              benefits
-            </p>
-            <AppButton
-              to="/"
-              class="card__btn card__btn--promo"
-            >
-              Get Started Today
-            </AppButton>
+        <Animated
+          type="fade-right"
+          :delay="0.1"
+        >
+          <div class="swiper-slide services__slide--promo">
+            <div class="services__card card">
+              <h4 class="card__title">Get Started With Your Free Trial</h4>
+              <p class="card__text">
+                Explore yoga at our serene studio with a complimentary session. Meet our instructors and discover the
+                benefits
+              </p>
+              <AppButton
+                to="/"
+                class="card__btn card__btn--promo"
+              >
+                Get Started Today
+              </AppButton>
+            </div>
           </div>
-        </div>
+        </Animated>
         <AppSwiper
           v-if="swiperOptions"
           :options="swiperOptions"
@@ -91,24 +96,34 @@ const servicesList = [
             :key="index"
             class="swiper-slide services__slide"
           >
-            <div class="services__card card">
-              <div class="card__icon">
-                <component
-                  :is="`svgo-${service.icon}`"
-                  class="service-icon"
-                />
-              </div>
+            <Animated
+              type="fade-up"
+              :delay="0.2 + index * 0.3"
+            >
+              <div class="services__card card">
+                <div class="card__icon">
+                  <component
+                    :is="`svgo-${service.icon}`"
+                    class="service__icon"
+                  />
+                </div>
 
-              <h4 class="card__title">{{ service.title }}</h4>
-              <p class="card__text">
-                {{ service.text }}
-              </p>
-              <AppButton class="card__btn">Learn More</AppButton>
-            </div>
+                <h4 class="card__title">{{ service.title }}</h4>
+                <p class="card__text">
+                  {{ service.text }}
+                </p>
+                <AppButton class="card__btn">Learn More</AppButton>
+              </div>
+            </Animated>
           </div>
         </AppSwiper>
       </div>
-      <div class="services__nav">
+      <Animated
+        type="zoom-in"
+        :stagger="0.15"
+        :delay="0.4"
+        class="services__nav"
+      >
         <button
           class="services__btn services__btn--prev"
           aria-label="To Back"
@@ -121,7 +136,7 @@ const servicesList = [
         >
           <svgo-slider-arrow class="services__btn--arrow" />
         </button>
-      </div>
+      </Animated>
     </div>
   </section>
 </template>
@@ -197,10 +212,18 @@ const servicesList = [
 
   // .services__card
   &__card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+    .service__icon {
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      will-change: transform;
+    }
+
+    @media (any-hover: hover) {
+      &:hover {
+        .service__icon {
+          transform: rotate(360deg);
+        }
+      }
+    }
   }
 
   // .services__swiper
@@ -246,6 +269,11 @@ const servicesList = [
 .swiper-slide {
 }
 .card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
   // .card__title
   &__title {
     font-size: 24px;

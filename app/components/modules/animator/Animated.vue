@@ -1,11 +1,11 @@
-<!-- app\components\modules\animator\Animated.vue -->
 <script setup lang="ts">
-import gsap from "gsap";
+import { ref, onMounted, onUnmounted } from "vue";
+import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-type AnimationType =
+export type AnimationType =
   | "fade-up"
   | "fade-down"
   | "fade-left"
@@ -17,37 +17,30 @@ type AnimationType =
   | "slide-up"
   | "none";
 
-const props = withDefaults(
-  defineProps<{
-    type?: AnimationType;
-    duration?: number;
-    delay?: number;
-    trigger?: boolean;
-    start?: string;
-    end?: string;
-    scrub?: boolean | number;
-    stagger?: number;
-    from?: Record<string, gsap.TweenVars>;
-    to?: Record<string, gsap.TweenVars>;
-    ease?: string;
-  }>(),
-  {
-    type: "fade-up",
-    duration: 0.8,
-    delay: 0,
-    trigger: true,
-    start: "top 85%",
-    end: "bottom top",
-    scrub: false,
-    stagger: 0,
-    from: () => ({}),
-    to: () => ({}),
-    ease: "power2.out",
-  },
-);
+interface Props {
+  type?: AnimationType;
+  duration?: number;
+  delay?: number;
+  stagger?: number;
+  trigger?: boolean;
+  start?: string;
+  end?: string;
+  scrub?: boolean | number;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  type: "fade-up",
+  duration: 0.8,
+  delay: 0,
+  stagger: 0,
+  trigger: true,
+  start: "top 85%",
+  end: "bottom 20%",
+  scrub: false,
+});
 
 const root = ref<HTMLElement | null>(null);
-let ctx: gsap.Context | null = null;
+let ctx: gsap.Context;
 
 const animationMap: Record<AnimationType, gsap.TweenVars> = {
   "fade-up": { opacity: 0, y: 40 },
@@ -66,11 +59,11 @@ onMounted(() => {
   if (!root.value || props.type === "none") return;
 
   ctx = gsap.context(() => {
-    const fromValues: gsap.TweenVars = {
-      ...animationMap[props.type],
-      ...props.from,
-    };
-    const toValues: gsap.TweenVars = {
+    const targets = props.stagger && root.value?.children.length ? root.value.children : root.value;
+
+    const fromVars = animationMap[props.type] || animationMap["fade-up"];
+
+    const toVars: gsap.TweenVars = {
       opacity: 1,
       x: 0,
       y: 0,
@@ -78,36 +71,40 @@ onMounted(() => {
       filter: "blur(0px)",
       duration: props.duration,
       delay: props.delay,
-      ease: props.ease,
-      ...props.to,
+      stagger: props.stagger || undefined,
+      ease: "power3.out",
+      // 💡 Очищаем ТОЛЬКО transform, чтобы не ломать CSS-ховеры, но оставляем opacity: 1!
+      clearProps: "transform",
     };
+
     if (props.trigger) {
-      toValues.scrollTrigger = {
+      toVars.scrollTrigger = {
         trigger: root.value,
         start: props.start,
-        end: props.end,
-        scrub: props.scrub,
-        toggleActions: "play none none reverse",
+        once: true, // Анимируется один раз при доскролле
       };
     }
-    gsap.fromTo(root.value, fromValues, toValues);
+
+    gsap.fromTo(targets, fromVars, toVars);
   }, root.value);
 });
+
 onUnmounted(() => {
-  if (ctx) ctx.revert();
+  ctx?.revert();
 });
 </script>
+
 <template>
   <div
     ref="root"
-    class="animated"
+    class="animated-element"
   >
-    <slot></slot>
+    <slot />
   </div>
 </template>
 
-<style lang="scss" scoped>
-.animated {
+<style scoped>
+.animated-element {
   will-change: transform, opacity;
 }
 </style>

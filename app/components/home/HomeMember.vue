@@ -21,28 +21,28 @@ import { popupStore } from "@/components/modules/popup/popupStore";
           type="fade-up"
           :stagger="0.1"
         >
-        <h2 class="member__title">Free 30 Day MemberShip</h2>
-        <p class="member__text">
-          Enjoy a complimentary 30-day free trial of our yoga and fitness classes. Experience our serene studio, expert
-          trainers, and diverse class offerings without any commitment. Discover the benefits of yoga and transform your
-          well-being with us
-        </p>
-        <div class="member__btn">
-          <AppButton
-            to="/"
-            class="member__btn-link"
-          >
-            Book A Session
-          </AppButton>
-          <AppButton
-            to="/"
-            class="member__btn-contacts"
-            @click="popupStore.open('callback')"
-          >
-            <span>Contact Us</span>
-            <svgo-arrow-nav class="member__arrow" />
-          </AppButton>
-        </div>
+          <h2 class="member__title">Free 30 Day MemberShip</h2>
+          <p class="member__text">
+            Enjoy a complimentary 30-day free trial of our yoga and fitness classes. Experience our serene studio,
+            expert trainers, and diverse class offerings without any commitment. Discover the benefits of yoga and
+            transform your well-being with us
+          </p>
+          <div class="member__btn">
+            <AppButton
+              to="/"
+              class="member__btn-link"
+            >
+              Book A Session
+            </AppButton>
+            <AppButton
+              to="/"
+              class="member__btn-contacts"
+              @click="popupStore.open('callback')"
+            >
+              <span>Contact Us</span>
+              <svgo-arrow-nav class="member__arrow" />
+            </AppButton>
+          </div>
         </Animated>
       </div>
     </div>
@@ -78,7 +78,7 @@ import { popupStore } from "@/components/modules/popup/popupStore";
     width: 100%;
     height: 100%;
     grid-column: 1 / 3;
-    grid-row: 1; // Сажаем в первую строку
+    grid-row: 1;
 
     @media (max-width: $mobile) {
       grid-column: 1;
@@ -116,6 +116,8 @@ import { popupStore } from "@/components/modules/popup/popupStore";
       grid-column: 1;
       grid-row: 2;
       box-shadow: 0 4px 20px rgb(0 0 0 / 5%);
+      margin-right: 0;
+      background-color: #f1efe5;
     }
   }
 

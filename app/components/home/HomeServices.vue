@@ -8,8 +8,8 @@ const swiperOptions = {
   autoplay: false,
   slidesPerView: "auto",
   spaceBetween: 50,
-  observer: true, // 💡 Важно для ресайза
-  observeParents: true, // 💡 Важно для ресайза
+  observer: true,
+  observeParents: true,
   resizeObserver: true,
   navigation: {
     prevEl: ".services__btn--prev",
@@ -85,6 +85,7 @@ const servicesList = [
             </div>
           </div>
         </Animated>
+
         <AppSwiper
           v-if="swiperOptions"
           :options="swiperOptions"
@@ -98,7 +99,8 @@ const servicesList = [
           >
             <Animated
               type="fade-up"
-              :delay="0.2 + index * 0.3"
+              :delay="0.2 + index * 0.15"
+              style="height: 100%; width: 100%"
             >
               <div class="services__card card">
                 <div class="card__icon">
@@ -118,6 +120,7 @@ const servicesList = [
           </div>
         </AppSwiper>
       </div>
+
       <Animated
         type="zoom-in"
         :stagger="0.15"
@@ -150,12 +153,9 @@ const servicesList = [
     background-color: #fff;
   }
 }
+
 .services {
   overflow: hidden;
-
-  // .services__container
-  &__container {
-  }
 
   // .services__slider
   &__slider {
@@ -173,6 +173,7 @@ const servicesList = [
   // .services__slide--promo
   &__slide--promo {
     width: 320px;
+    height: 100%;
     background-color: $colorAccent;
     padding: 100px 35px;
     border-radius: 25px;
@@ -183,6 +184,7 @@ const servicesList = [
       -10px 18px 13px 0 rgb(0 0 0 / 5.5%),
       -4px 7px 7px 0 rgb(0 0 0 / 4.32%),
       -1px 2px 3px 0 rgb(0 0 0 / 2.65%);
+
     .card__title {
       color: #fff;
     }
@@ -194,10 +196,11 @@ const servicesList = [
   // .services__slide
   &__slide {
     width: 294px;
+    height: auto; // Позволяет Swiper растягивать слайды в одинаковую высоту
+    display: flex;
     background-color: #f6f9fc;
     padding: 35px;
     border-radius: 25px;
-    transform: translate(0);
     transition: transform 0.3s ease 0s;
 
     @media (any-hover: hover) {
@@ -205,13 +208,12 @@ const servicesList = [
         transform: translateY(-15px);
       }
     }
-
-    @media (max-width: $mobile) {
-    }
   }
 
   // .services__card
   &__card {
+    height: 100%;
+
     .service__icon {
       transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
       will-change: transform;
@@ -232,6 +234,10 @@ const servicesList = [
     padding-top: 15px;
     margin-top: -15px;
 
+    :deep(.swiper-wrapper) {
+      align-items: stretch; // 🔥 Все слайды встают в один уровень по высоте!
+    }
+
     @media (max-width: $mobile) {
       padding-left: 0;
     }
@@ -240,7 +246,7 @@ const servicesList = [
   // .services__nav
   &__nav {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     gap: 30px;
   }
 
@@ -250,29 +256,23 @@ const servicesList = [
     margin-top: 40px;
   }
 
-  // .services__btn--prev
   &__btn--prev {
     transform: rotate(180deg);
   }
 
-  // .services__btn--next
-  &__btn--next {
-  }
-
-  // .services__btn--arrow
   &__btn--arrow {
     width: 40px;
     height: 40px;
     color: $colorAccent;
   }
 }
-.swiper-slide {
-}
+
 .card {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  width: 100%;
   gap: 10px;
+  justify-content: space-between;
 
   // .card__title
   &__title {
@@ -285,10 +285,13 @@ const servicesList = [
   &__text {
     text-align: center;
     line-height: math.div(28, 16);
+    flex-grow: 1;
   }
 
   // .card__btn
   &__btn {
+    align-self: center;
+    margin-top: auto;
     background-color: transparent;
     outline: 2px solid $colorAccent;
     outline-offset: -2px;
@@ -306,16 +309,17 @@ const servicesList = [
     }
   }
 
-  // .card__btn--promo
   &__btn--promo {
     background-color: #fff;
     outline: none;
     padding: 16px 24px;
   }
 
-  // .card__icon
   &__icon {
+    display: flex;
+    justify-content: center;
     margin-bottom: 10px;
+
     svg {
       width: 80px;
       height: 80px;
@@ -323,6 +327,7 @@ const servicesList = [
     }
   }
 }
+
 .swiper-button-disabled {
   cursor: default;
   svg {

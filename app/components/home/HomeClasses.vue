@@ -332,12 +332,18 @@ const classItems = [
     grid-template-columns: 1fr 1fr;
 
     @include adaptiveValue("gap", 48, 30, $containerWidth, $tablet);
+
+    @include media($mobile) {
+      display: flex;
+      flex-direction: column;
+    }
   }
 
   // .classes__feature
   &__feature {
     display: flex;
     flex-direction: column;
+    align-items: center;
 
     @include adaptiveValue("gap", 25, 10, $containerWidth, $tablet);
   }
@@ -371,6 +377,9 @@ const classItems = [
 
   // .classes__btn-link
   &__btn-link {
+    @include media($mobile) {
+      margin-bottom: 30px;
+    }
   }
 }
 </style>

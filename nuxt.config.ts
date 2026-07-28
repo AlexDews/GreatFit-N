@@ -12,15 +12,20 @@ export default defineNuxtConfig({
   app: {
     baseURL: import.meta.env.NUXT_PUBLIC_BASE_URL || "/",
     head: {
-      title: "Great Fit - Yoga Studio",
+      htmlAttrs: {
+        lang: 'en'
+      },
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         { name: "theme-color", content: "#1e3d2f" },
+
+        { property: 'og:type', content: 'website' },
+        { property: 'og:locale', content: 'en_EN' }
       ],
       link: [
-        { rel: "icon", type: "image/x-icon", href: "favicons/favicon.ico" },
-        { rel: "icon", type: "image/svg+xml", href: "favicons/favicon.svg" },
+        { rel: "icon", type: "image/x-icon", href: "/favicons/favicon.ico" },
+        { rel: "icon", type: "image/svg+xml", href: "/favicons/favicon.svg" },
         { rel: "apple-touch-icon", sizes: "180x180", href: "/favicons/apple-touch-icon.png?v=1" },
       ],
     },

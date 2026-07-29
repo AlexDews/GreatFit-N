@@ -129,4 +129,8 @@ export default defineNuxtConfig({
     format: ["avif", "webp", "jpg"], // Явно указываем форматы
     quality: 80,
   },
+
+  experimental: {
+    payloadExtraction: false, // НЕ генерировать отдельные .json файлы метаданных
+  },
 });

@@ -345,9 +345,13 @@ const classItems = [
   &__feature {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: start;
 
     @include adaptiveValue("gap", 25, 10, $containerWidth, $tablet);
+
+    @include media($mobile) {
+      align-items: center;
+    }
   }
 
   // .classes__feature-num

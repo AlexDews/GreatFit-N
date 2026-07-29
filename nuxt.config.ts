@@ -61,15 +61,18 @@ export default defineNuxtConfig({
     build: {
       // Все мелкие файлы до 4Кб вшиваем прямо в бандл, чтобы убрать кучу микро-запросов
       assetsInlineLimit: 4096,
+      modulePreload: {
+        polyfill: true,
+      },
       rollupOptions: {
         output: {
           // Объединяем библиотеки из node_modules в единый vendor-чанк,
           // чтобы исключить цепочки импортов (Waterfall)
-          manualChunks(id) {
-            if (id.includes("node_modules")) {
-              return "vendor";
-            }
-          },
+          // manualChunks(id) {
+          //   if (id.includes("node_modules")) {
+          //     return "vendor";
+          //   }
+          // },
         },
       },
     },

@@ -19,11 +19,33 @@ const hasChildren = computed(() => props.item.children && props.item.children.le
 const isOpen = ref(false);
 const submenuRef = ref<HTMLUListElement | null>(null);
 
+// Кэшируем состояние: десктоп или мобилка (чтобы не дергать window.innerWidth при каждом ховере)
+const isDesktop = ref(true);
+
+onMounted(() => {
+  if (import.meta.client) {
+    const mediaQuery = window.matchMedia("(min-width: 992px)");
+    isDesktop.value = mediaQuery.matches;
+
+    // Подписываемся на изменение размера экрана с помощью слушателя событий
+    const updateMedia = (e: MediaQueryListEvent) => {
+      isDesktop.value = e.matches;
+    };
+
+    mediaQuery.addEventListener("change", updateMedia);
+
+    onUnmounted(() => {
+      mediaQuery.removeEventListener("change", updateMedia);
+    });
+  }
+});
+
 const linkAttrs = computed(() => ({
   to: props.item.href,
   ...(props.item.external ? { target: "_blank", rel: "noopener noreferrer" } : {}),
 }));
 
+// GSAP анимация выпадающего меню
 watch(isOpen, (val) => {
   if (!submenuRef.value || !import.meta.client) return;
 
@@ -48,20 +70,21 @@ watch(isOpen, (val) => {
   }
 });
 
+// Быстрые и чистые обработчики БЕЗ обращений к window.innerWidth!
 const handleMouseEnter = () => {
-  if (import.meta.client && window.innerWidth > 991.98 && hasChildren.value) {
+  if (isDesktop.value && hasChildren.value) {
     isOpen.value = true;
   }
 };
 
 const handleMouseLeave = () => {
-  if (import.meta.client && window.innerWidth > 991.98) {
+  if (isDesktop.value) {
     isOpen.value = false;
   }
 };
 
 const handleClick = (e: MouseEvent) => {
-  if (import.meta.client && window.innerWidth <= 991.98 && hasChildren.value) {
+  if (!isDesktop.value && hasChildren.value) {
     e.preventDefault();
     isOpen.value = !isOpen.value;
   }

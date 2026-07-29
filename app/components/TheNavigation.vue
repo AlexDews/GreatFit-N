@@ -1,21 +1,16 @@
 <!-- components/TheNavigation.vue -->
 <script setup lang="ts">
-const { menuItems} = useMenu();
+const { menuItems } = useMenu();
 </script>
 
 <template>
   <ul class="nav__menu">
-    <Animated
+    <NavItem
       v-for="(item, index) in menuItems"
       :key="item.id"
-      type="fade-down"
-      :delay="0.3 + index * 0.2"
-      :trigger="false"
-    >
-      <NavItem
-        :item="item"
-      />
-    </Animated>
+      :item="item"
+      :index="index"
+    />
   </ul>
 </template>
 

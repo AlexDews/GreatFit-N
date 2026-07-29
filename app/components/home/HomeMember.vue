@@ -31,12 +31,14 @@ import { popupStore } from "@/components/modules/popup/popupStore";
             <AppButton
               to="/"
               class="member__btn-link"
+              aria-label="Book A Session"
             >
               Book A Session
             </AppButton>
             <AppButton
               to="/"
               class="member__btn-contacts"
+              aria-label="Contact Us"
               @click="popupStore.open('callback')"
             >
               <span>Contact Us</span>

@@ -79,6 +79,7 @@ const servicesList = [
               <AppButton
                 to="/"
                 class="card__btn card__btn--promo"
+                aria-label="Get Started Today"
               >
                 Get Started Today
               </AppButton>
@@ -114,7 +115,12 @@ const servicesList = [
                 <p class="card__text">
                   {{ service.text }}
                 </p>
-                <AppButton class="card__btn">Learn More</AppButton>
+                <AppButton
+                  class="card__btn"
+                  :aria-label="service.title"
+                >
+                  Learn More
+                </AppButton>
               </div>
             </Animated>
           </div>

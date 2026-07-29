@@ -7,14 +7,16 @@ const props = withDefaults(
   defineProps<{
     item: MenuItem;
     isSub?: boolean;
+    index?: number;
   }>(),
   {
     isSub: false,
+    index: 0,
   },
 );
 
 const hasChildren = computed(() => props.item.children && props.item.children.length > 0);
-const isOpen = ref(false); // Локальный стейт. Всё!
+const isOpen = ref(false);
 const submenuRef = ref<HTMLUListElement | null>(null);
 
 const linkAttrs = computed(() => ({
@@ -22,12 +24,11 @@ const linkAttrs = computed(() => ({
   ...(props.item.external ? { target: "_blank", rel: "noopener noreferrer" } : {}),
 }));
 
-// GSAP анимация только при изменении локального флага
 watch(isOpen, (val) => {
   if (!submenuRef.value || !import.meta.client) return;
-  
+
   gsap.killTweensOf(submenuRef.value);
-  
+
   if (val) {
     gsap.to(submenuRef.value, {
       height: "auto",
@@ -60,7 +61,6 @@ const handleMouseLeave = () => {
 };
 
 const handleClick = (e: MouseEvent) => {
-  // На мобильном просто инвертируем состояние при клике
   if (import.meta.client && window.innerWidth <= 991.98 && hasChildren.value) {
     e.preventDefault();
     isOpen.value = !isOpen.value;
@@ -74,9 +74,31 @@ const handleClick = (e: MouseEvent) => {
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
   >
+    <!-- 1. Главные пункты меню (с анимацией) -->
+    <Animated
+      v-if="!isSub"
+      type="fade-down"
+      :delay="0.3 + index * 0.2"
+      :trigger="false"
+    >
+      <NuxtLink
+        v-bind="linkAttrs"
+        class="nav__link"
+        @click="handleClick"
+      >
+        {{ item.label }}
+        <svgo-arrow-nav
+          v-if="hasChildren"
+          class="nav__icon"
+        />
+      </NuxtLink>
+    </Animated>
+
+    <!-- 2. Пункты выпадающего подменю (без лишней анимации появления) -->
     <NuxtLink
+      v-else
       v-bind="linkAttrs"
-      :class="isSub ? 'nav__sublink' : 'nav__link'"
+      class="nav__sublink"
       @click="handleClick"
     >
       {{ item.label }}
@@ -86,17 +108,18 @@ const handleClick = (e: MouseEvent) => {
       />
     </NuxtLink>
 
-    <!-- Рекурсия: если есть дети, вызываем этот же компонент -->
+    <!-- 3. Вложенное подменю -->
     <ul
       v-if="hasChildren"
       ref="submenuRef"
       class="nav__submenu"
     >
       <NavItem
-        v-for="child in item.children"
+        v-for="(child, childIndex) in item.children"
         :key="child.id"
         :item="child"
         :is-sub="true"
+        :index="childIndex"
       />
     </ul>
   </li>
@@ -199,6 +222,7 @@ const handleClick = (e: MouseEvent) => {
   &__sublink {
     font-size: 14px;
     padding: 10px 20px;
+    width: 100%;
   }
 }
 </style>

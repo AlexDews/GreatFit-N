@@ -64,7 +64,7 @@ const classTeams = [
           :delay="0.1"
           class="team__items"
         >
-          <RouterLink
+          <NuxtLink
             v-for="(team, index) in classTeams"
             :key="index"
             class="team__item"
@@ -80,11 +80,12 @@ const classTeams = [
               <div class="team__name">{{ team.name }}</div>
               <div class="team__position">{{ team.position }}</div>
             </div>
-          </RouterLink>
+          </NuxtLink>
         </Animated>
         <AppButton
           to="/"
           class="team__btn-link"
+          aria-label="Learn More About Us"
         >
           Learn More About Us
         </AppButton>

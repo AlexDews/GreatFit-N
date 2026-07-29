@@ -161,6 +161,7 @@ const classItems = [
                     >
                       <AppPicture
                         class="classes__img"
+                        :aria-label="item.title"
                         desktop-src="/images/home/tabs-1.jpg"
                         alt="Classes Image"
                         format="avif"
@@ -202,6 +203,7 @@ const classItems = [
                   <AppButton
                     to="/"
                     class="classes__btn-link"
+                    aria-label="Get Your Free Trial"
                   >
                     Get Your Free Trial
                   </AppButton>

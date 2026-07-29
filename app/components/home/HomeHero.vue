@@ -53,6 +53,7 @@ import { popupStore } from "@/components/modules/popup/popupStore";
               <AppButton
                 to="/"
                 class="hero__btn-link"
+                aria-label="Book A Session"
               >
                 Book A Session
               </AppButton>
@@ -64,6 +65,7 @@ import { popupStore } from "@/components/modules/popup/popupStore";
             >
               <AppButton
                 class="hero__btn-contacts"
+                aria-label="Contact Us"
                 @click="popupStore.open('callback')"
               >
                 <span>Contact Us</span>

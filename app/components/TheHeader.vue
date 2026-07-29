@@ -21,13 +21,13 @@
             :trigger="false"
             class="logo header__logo"
           >
-            <RouterLink
+            <NuxtLink
               to="/"
               class="logo__link"
             >
               <img
                 src="/images/logo/logo.svg"
-                alt="Логотип Название"
+                alt="Great Fit Logo"
               />
               <div class="logo__text">
                 <strong>
@@ -36,10 +36,10 @@
                 </strong>
                 <span class="logo__subtext">Yoga Studio</span>
               </div>
-            </RouterLink>
+            </NuxtLink>
           </Animated>
 
-          <nav class="header__nav nav">
+          <nav class="header__nav nav" aria-label="Main Navigation">
             <TheNavigation />
           </nav>
           <div class="header__burger">
@@ -54,7 +54,7 @@
               to="/"
               class="header__btn"
             >
-              <svgo-cart class="header__cart" />
+              <svgo-cart class="header__cart" aria-label="Shop Now" />
               <span>Shop Now</span>
             </AppButton>
           </Animated>

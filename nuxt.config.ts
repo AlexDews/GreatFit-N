@@ -13,15 +13,15 @@ export default defineNuxtConfig({
     baseURL: import.meta.env.NUXT_PUBLIC_BASE_URL || "/",
     head: {
       htmlAttrs: {
-        lang: 'en'
+        lang: "en",
       },
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         { name: "theme-color", content: "#1e3d2f" },
 
-        { property: 'og:type', content: 'website' },
-        { property: 'og:locale', content: 'en_EN' }
+        { property: "og:type", content: "website" },
+        { property: "og:locale", content: "en_EN" },
       ],
       link: [
         { rel: "icon", type: "image/x-icon", href: "/favicons/favicon.ico" },
@@ -33,14 +33,19 @@ export default defineNuxtConfig({
 
   ssr: true,
 
-  nitro: {
-  },
+  nitro: {},
 
   // 4. Шрифты (@nuxt/fonts)
   fonts: {
     // Меняем служебную папку с _fonts на fonts
     assets: {
       prefix: "/fonts/",
+    },
+    defaults: {
+      weights: [400, 500, 600, 700],
+      styles: ["normal"],
+      subsets: ["latin"],
+      preload: true,
     },
     families: [
       { name: "Montserrat", weights: [300, 400, 500, 600, 700] },
@@ -116,7 +121,7 @@ export default defineNuxtConfig({
 
   // 10. Тонкие настройки Nuxt (Features)
   features: {
-    inlineStyles: false, // Отключает генерацию встроенных <style> тегов в HTML
+    inlineStyles: true, // Отключает генерацию встроенных <style> тегов в HTML
   },
 
   image: {

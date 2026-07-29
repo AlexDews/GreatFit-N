@@ -71,7 +71,7 @@ const servicesList = [
         >
           <div class="swiper-slide services__slide--promo">
             <div class="services__card card">
-              <h4 class="card__title">Get Started With Your Free Trial</h4>
+              <h3 class="card__title">Get Started With Your Free Trial</h3>
               <p class="card__text">
                 Explore yoga at our serene studio with a complimentary session. Meet our instructors and discover the
                 benefits

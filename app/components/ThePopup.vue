@@ -25,6 +25,7 @@ const onSuccessSubmit = (data) => {
               name="name"
               placeholder="Your Name"
               class="popup-callback__input"
+              data-validate="name"
             />
             <span
               v-if="errors.name"
@@ -43,7 +44,7 @@ const onSuccessSubmit = (data) => {
               v-imask="{ type: 'phone' }"
               type="tel"
               name="tel"
-              data-validate="phone"
+              data-validate="phone required"
               placeholder="Your Phone Number"
               class="popup-callback__input"
             />
@@ -133,9 +134,9 @@ const onSuccessSubmit = (data) => {
 
   &__error {
     color: red;
-    position: relative;
+    position: absolute;
     display: flex;
-    bottom: 0;
+    bottom: -17px;
     left: 0;
 
     @include adaptiveValue("font-size", 14, 12);

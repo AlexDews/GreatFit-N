@@ -1,10 +1,9 @@
-// app/composables/useFormValidation.ts
 import { ref } from "vue";
 import { formConfig } from "~/components/modules/forms/config";
 import { systemConfig } from "./system.config";
 
 export function useFormValidation() {
-  const errors = ref<Record<string, string | undefined>>({}); // Хранилище ошибок
+  const errors = ref<Record<string, string | undefined>>({});
 
   // ==========================================================================
   // --- 1. ВАЛИДАЦИЯ И БЕЗОПАСНОСТЬ ---
@@ -21,7 +20,7 @@ export function useFormValidation() {
     let s = 0;
     let a = false;
     for (let i = n.length - 1; i >= 0; i--) {
-      const char = n[i] || ""; // Защита от undefined
+      const char = n[i] || "";
       let d = parseInt(char, 10);
       if (a) {
         d *= 2;
@@ -55,37 +54,59 @@ export function useFormValidation() {
     });
   };
 
-  const validateField = (fieldName: string, value: unknown, type: string, isChecked = false): void => {
+  const validateField = (fieldName: string, value: unknown, types: string | string[], isChecked = false): void => {
     let error: string | null = null;
     const val = typeof value === "string" ? value.trim() : "";
     const cleanVal = val.replace(/\D/g, "");
 
+    const rules = Array.isArray(types)
+      ? types
+      : types
+          .split(" ")
+          .map((rule) => rule.trim())
+          .filter(Boolean);
+
+    // 1. Проверка на XSS
     if (systemConfig.security.enableSanitization && containsPotentialXSS(val)) {
       error = "Поле содержит недопустимые символы (XSS защита)";
-    } else if (type === "checkbox") {
-      if (!isChecked) error = formConfig.messages.checkbox;
-    } else if (type === "select" && !value) {
-      error = formConfig.messages.select;
-    } else if (type === "name" && !val) {
-      error = formConfig.messages.name;
-    } else if (!val && type === "required") {
-      error = formConfig.messages.required;
-    } else if (val) {
-      if (type === "email" && !(formConfig.validation.email.pattern as RegExp).test(val)) {
+    }
+
+    // Список правил, которые сами по себе требуют непустого значения
+    const alwaysRequiredRules = ["required", "name", "select", "checkbox"];
+
+    // 2. Проверка по правилам
+    for (const rule of rules) {
+      if (error) break;
+
+      // Если значение пустое и правило НЕ входит в список обязательных — пропускаем (например, необязательный email или телефон)
+      if (!val && !alwaysRequiredRules.includes(rule) && typeof value !== "boolean") {
+        continue;
+      }
+
+      // --- ПРАВИЛА ВАЛИДАЦИИ ---
+      if (rule === "required" && !val && typeof value !== "boolean") {
+        error = formConfig.messages.required;
+      } else if (rule === "name" && !val) {
+        error = formConfig.messages.name;
+      } else if ((rule === "checkbox" || (rule === "required" && typeof value === "boolean")) && !isChecked) {
+        error = formConfig.messages.checkbox;
+      } else if (rule === "select" && !value) {
+        error = formConfig.messages.select;
+      } else if (rule === "email" && !(formConfig.validation.email.pattern as RegExp).test(val)) {
         error = formConfig.messages.email;
-      } else if (type === "phone" && cleanVal.length < 11) {
+      } else if (rule === "phone" && cleanVal.length < 11) {
         error = formConfig.messages.phone;
-      } else if (type === "card") {
+      } else if (rule === "card") {
         if (cleanVal.length < 16) {
           error = "Номер карты должен содержать минимум 16 цифр";
         } else if (!luhnCheck(cleanVal)) {
           error = formConfig.messages.card;
         }
-      } else if (type === "cardCvc" && cleanVal.length < 3) {
+      } else if (rule === "cardCvc" && cleanVal.length < 3) {
         error = formConfig.messages.cardCvc;
-      } else if (type === "cardExpiry" && !checkExpiry(val)) {
+      } else if (rule === "cardExpiry" && !checkExpiry(val)) {
         error = formConfig.messages.cardExpiry || "Срок действия карты истек";
-      } else if (type === "date") {
+      } else if (rule === "date") {
         const dateParts = val.split(".");
         const d = Number(dateParts[0] || 0);
         const m = Number(dateParts[1] || 0);
@@ -108,7 +129,7 @@ export function useFormValidation() {
     if (error) {
       errors.value[fieldName] = error;
     } else {
-      errors.value[fieldName] = undefined;;
+      errors.value[fieldName] = undefined;
     }
   };
 

@@ -19,7 +19,6 @@ const hasChildren = computed(() => props.item.children && props.item.children.le
 const isOpen = ref(false);
 const submenuRef = ref<HTMLUListElement | null>(null);
 
-// Кэшируем состояние: десктоп или мобилка (чтобы не дергать window.innerWidth при каждом ховере)
 const isDesktop = ref(true);
 
 onMounted(() => {
@@ -27,7 +26,6 @@ onMounted(() => {
     const mediaQuery = window.matchMedia("(min-width: 992px)");
     isDesktop.value = mediaQuery.matches;
 
-    // Подписываемся на изменение размера экрана с помощью слушателя событий
     const updateMedia = (e: MediaQueryListEvent) => {
       isDesktop.value = e.matches;
     };

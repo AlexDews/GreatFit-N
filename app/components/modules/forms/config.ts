@@ -34,7 +34,7 @@ export const formConfig = {
 
   // Локализация ошибок
   messages: {
-    required: "Заполните поле",
+    required: "Required field to fill in",
     email: "Введите корректный Email",
     phone: "Error, incorrect phone number",
     number: "Только цифры",
@@ -46,7 +46,7 @@ export const formConfig = {
     cardCvc: "CVC/CVV (3 цифры)",
     checkbox: "Нужно согласие на обработку персональных данных",
     select: "Пожалуйста, выберите город",
-    name: "Введите имя",
+    name: "Enter your name",
   },
 
   // Регулярные выражения
@@ -66,7 +66,7 @@ export const formConfig = {
   imask: {
     phone: {
       enabled: true,
-      mask: "+{7} (000) 000-00-00",
+      mask: "+{1} (000) 000-00-00",
       lazy: true,
     },
     date: {

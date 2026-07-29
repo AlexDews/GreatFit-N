@@ -58,6 +58,21 @@ export default defineNuxtConfig({
 
   // 6. Сборщик Vite и SCSS-переменные
   vite: {
+    build: {
+      // Все мелкие файлы до 4Кб вшиваем прямо в бандл, чтобы убрать кучу микро-запросов
+      assetsInlineLimit: 4096,
+      rollupOptions: {
+        output: {
+          // Объединяем библиотеки из node_modules в единый vendor-чанк,
+          // чтобы исключить цепочки импортов (Waterfall)
+          manualChunks(id) {
+            if (id.includes("node_modules")) {
+              return "vendor";
+            }
+          },
+        },
+      },
+    },
     css: {
       devSourcemap: true,
       preprocessorOptions: {
@@ -121,7 +136,7 @@ export default defineNuxtConfig({
 
   // 10. Тонкие настройки Nuxt (Features)
   features: {
-    inlineStyles: true, // Отключает генерацию встроенных <style> тегов в HTML
+    inlineStyles: true, // Генерация встроенных <style> тегов в HTML
   },
 
   image: {
@@ -132,5 +147,10 @@ export default defineNuxtConfig({
 
   experimental: {
     payloadExtraction: false, // НЕ генерировать отдельные .json файлы метаданных
+    writeEarlyHints: true, // Подсказывает браузеру предзагружать скрипты параллельно
+  },
+
+  routeRules: {
+    "/": { prerender: true }, // Сгенерирует статическую страницу при деплое или "/": { isr: 3600 }, Перегенерирует страницу в фоне раз в час(в секундах)
   },
 });

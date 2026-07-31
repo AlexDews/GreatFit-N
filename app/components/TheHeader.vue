@@ -51,7 +51,6 @@
             class="header__btn--body"
           >
             <AppButton
-              to="/"
               class="header__btn"
             >
               <svgo-cart class="header__cart" aria-label="Shop Now" />

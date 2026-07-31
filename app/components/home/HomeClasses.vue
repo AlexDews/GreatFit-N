@@ -4,123 +4,7 @@ import AppTabs from "@/components/modules/tabs/AppTabs.vue";
 import AppPicture from "@/components/ui/AppPicture.vue";
 import AppButton from "@/components/ui/AppButton.vue";
 
-const classItems = [
-  {
-    id: "beginners",
-    title: "Beginners Yoga",
-    text: "Perfect for newcomers, our beginners yoga classes focus on foundational poses and techniques to build strength, flexibility, and confidence. Start your yoga journey with us in a supportive and friendly environment.",
-    features: [
-      {
-        name: "Free Rugs",
-        text: "We provide clean, premium mats for every session. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-      {
-        name: "Changing Room",
-        text: "Spacious lockers and comfortable changing zones. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-      {
-        name: "Personal Trainer",
-        text: "Our experts will guide your every movement. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-      {
-        name: "Shower Access",
-        text: "Fresh towels and hot water are always ready. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-    ],
-  },
-  {
-    id: "stretching",
-    title: "Stretching",
-    text: "Perfect for newcomers, our beginners yoga classes focus on foundational poses and techniques to build strength, flexibility, and confidence. Start your yoga journey with us in a supportive and friendly environment.",
-    features: [
-      {
-        name: "Free Rugs",
-        text: "We provide clean, premium mats for every session. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-      {
-        name: "Changing Room",
-        text: "Spacious lockers and comfortable changing zones. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-      {
-        name: "Personal Trainer",
-        text: "Our experts will guide your every movement. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-      {
-        name: "Shower Access",
-        text: "Fresh towels and hot water are always ready. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-    ],
-  },
-  {
-    id: "fly",
-    title: "Fly-Yoga",
-    text: "Perfect for newcomers, our beginners yoga classes focus on foundational poses and techniques to build strength, flexibility, and confidence. Start your yoga journey with us in a supportive and friendly environment.",
-    features: [
-      {
-        name: "Free Rugs",
-        text: "We provide clean, premium mats for every session. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-      {
-        name: "Changing Room",
-        text: "Spacious lockers and comfortable changing zones. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-      {
-        name: "Personal Trainer",
-        text: "Our experts will guide your every movement. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-      {
-        name: "Shower Access",
-        text: "Fresh towels and hot water are always ready. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-    ],
-  },
-  {
-    id: "yin",
-    title: "Yin-Yoga",
-    text: "Perfect for newcomers, our beginners yoga classes focus on foundational poses and techniques to build strength, flexibility, and confidence. Start your yoga journey with us in a supportive and friendly environment.",
-    features: [
-      {
-        name: "Free Rugs",
-        text: "We provide clean, premium mats for every session. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-      {
-        name: "Changing Room",
-        text: "Spacious lockers and comfortable changing zones. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-      {
-        name: "Personal Trainer",
-        text: "Our experts will guide your every movement. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-      {
-        name: "Shower Access",
-        text: "Fresh towels and hot water are always ready. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-    ],
-  },
-  {
-    id: "zoomba",
-    title: "Zoomba",
-    text: "Perfect for newcomers, our beginners yoga classes focus on foundational poses and techniques to build strength, flexibility, and confidence. Start your yoga journey with us in a supportive and friendly environment.",
-    features: [
-      {
-        name: "Free Rugs",
-        text: "We provide clean, premium mats for every session. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-      {
-        name: "Changing Room",
-        text: "Spacious lockers and comfortable changing zones. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-      {
-        name: "Personal Trainer",
-        text: "Our experts will guide your every movement. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-      {
-        name: "Shower Access",
-        text: "Fresh towels and hot water are always ready. Perfect for newcomers, our beginners yoga classes focus on foundational.",
-      },
-    ],
-  },
-];
+const { classesItem } = useClasses();
 </script>
 
 <template>
@@ -137,12 +21,12 @@ const classItems = [
         <div class="classes__tabs">
           <AppTabs
             id="yoga"
-            :items="classItems"
+            :items="classesItem"
             class-tab="classes__tab"
             class-titles="classes__titles"
           >
             <template
-              v-for="(item, index) in classItems"
+              v-for="(item, index) in classesItem"
               :key="item.id || index"
               #[`content-${index}`]="{ activeIndex }"
             >
@@ -201,7 +85,6 @@ const classItems = [
                     </div>
                   </div>
                   <AppButton
-                    to="/"
                     class="classes__btn-link"
                     aria-label="Get Your Free Trial"
                   >

@@ -3,44 +3,7 @@ import AppTitle from "@/components/ui/AppTitle.vue";
 import AppPicture from "@/components/ui/AppPicture.vue";
 import AppButton from "@/components/ui/AppButton.vue";
 
-const classTeams = [
-  {
-    name: "Mark Andersson",
-    image: "images/home/team-1.jpg",
-    position: "Lead Yoga Instructor",
-    id: "mark-andersson",
-  },
-  {
-    name: "Julia Hurp",
-    image: "images/home/team-2.jpg",
-    position: "Yoga Instructor",
-    id: "julia-hurp",
-  },
-  {
-    name: "William Grok",
-    image: "images/home/team-3.jpg",
-    position: "Studio Manager",
-    id: "william-grok",
-  },
-  {
-    name: "Alisa Milova",
-    image: "images/home/team-4.jpg",
-    position: "Front Desk Lead",
-    id: "alisa-milova",
-  },
-  {
-    name: "Andry Middleson",
-    image: "images/home/team-5.jpg",
-    position: "Bodywork",
-    id: "andry-middleson",
-  },
-  {
-    name: "Alivia Carter",
-    image: "images/home/team-6.jpg",
-    position: "Substitute Teacher",
-    id: "alivia-carter",
-  },
-];
+const { teamItem } = useTeam();
 </script>
 
 <template>
@@ -65,7 +28,7 @@ const classTeams = [
           class="team__items"
         >
           <NuxtLink
-            v-for="(team, index) in classTeams"
+            v-for="(team, index) in teamItem"
             :key="index"
             class="team__item"
             :to="`/team/${team.id}`"
@@ -83,7 +46,6 @@ const classTeams = [
           </NuxtLink>
         </Animated>
         <AppButton
-          to="/"
           class="team__btn-link"
           aria-label="Learn More About Us"
         >

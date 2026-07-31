@@ -36,6 +36,7 @@ pnpm-debug.log*
 
 # === Специфично для проекта ===
 archive.zip
+freelance.md
 
 # === IDE (настройки редактора) ===
 .vscode/*

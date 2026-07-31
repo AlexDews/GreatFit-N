@@ -15,7 +15,7 @@ const toggleSubMenu = (id: number) => {
   openSubmenuId.value = openSubmenuId.value === id ? null : id;
 };
 
-//~--- Динамические стили для размеров меню (с дефолтами 100vw/vh) ---
+// ~ --- Динамические стили для размеров меню (с дефолтами 100vw/vh) ---
 const menuStyles = computed(() => {
   const { direction, size } = burgerConfig.appearance;
   const isHorizontal = direction === "left" || direction === "right";
@@ -29,7 +29,7 @@ const menuStyles = computed(() => {
   };
 });
 
-//~--- Пресеты анимации GSAP Stagger ---
+// ~ --- Пресеты анимации GSAP Stagger ---
 watch(isMenuOpen, async (isOpen) => {
   const animType = burgerConfig.appearance.animationType;
 
@@ -190,7 +190,6 @@ watch(isMenuOpen, async (isOpen) => {
 </template>
 
 <style lang="scss" scoped>
-// Стили для кнопки бургера и красивой CSS-анимации ее превращения в крестик
 .burger-btn {
   position: relative;
   flex-direction: column;
@@ -222,7 +221,6 @@ watch(isMenuOpen, async (isOpen) => {
     display: flex;
   }
 
-  // Анимация превращения трех полосок в крестик
   &--active {
     span {
       &:nth-child(1) {
@@ -339,13 +337,12 @@ watch(isMenuOpen, async (isOpen) => {
   transform: translateX(-50%);
   margin-top: 20px;
 
-  // .mobile-submenu__item
   &__item {
     font-size: 18px;
     padding: 20px 0;
   }
 }
 :deep(.accordion__content) {
-  width: 100%; // Списки внутри будут занимать всю ширину меню, а не раздувать ссылку
+  width: 100%;
 }
 </style>

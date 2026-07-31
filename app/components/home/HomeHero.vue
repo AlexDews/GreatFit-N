@@ -51,7 +51,6 @@ import { popupStore } from "@/components/modules/popup/popupStore";
               :trigger="false"
             >
               <AppButton
-                to="/"
                 class="hero__btn-link"
                 aria-label="Book A Session"
               >

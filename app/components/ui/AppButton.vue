@@ -1,26 +1,29 @@
-<!-- app\components\ui\AppButton.vue -->
+<!-- app/components/ui/AppButton.vue -->
+<script setup lang="ts">
+defineProps<{
+  to?: string | object
+  type?: 'button' | 'submit' | 'reset'
+}>()
+</script>
+
 <template>
-  <component
-    :is="to ? 'NuxtLink' : 'button'"
+  <!-- Если есть to — рендерим NuxtLink, иначе button -->
+  <NuxtLink
+    v-if="to"
     :to="to"
     class="ui-btn"
   >
     <slot>Button</slot>
-  </component>
-</template>
+  </NuxtLink>
 
-<script setup>
-defineProps({
-  to: {
-    type: String,
-    default: "",
-  },
-  type: {
-    type: String,
-    default: "button", // По умолчанию 'button', чтобы форма случайно не отправлялась
-  },
-});
-</script>
+  <button
+    v-else
+    :type="type || 'button'"
+    class="ui-btn"
+  >
+    <slot>Button</slot>
+  </button>
+</template>
 
 <style lang="scss" scoped>
 :where(.ui-btn) {

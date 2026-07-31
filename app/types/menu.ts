@@ -5,5 +5,6 @@ export interface MenuItem {
   href: string;
   external?: boolean;
   icon?: string;
-	children?: MenuItem[];
+  children?: MenuItem[];
 }
+ 

@@ -3,6 +3,8 @@ import AppSwiper from "@/components/modules/swiper/AppSlider.vue";
 import AppButton from "@/components/ui/AppButton.vue";
 import AppTitle from "@/components/ui/AppTitle.vue";
 
+const { servicesItem } = useServices();
+
 const swiperOptions = {
   loop: false,
   autoplay: false,
@@ -22,39 +24,6 @@ const swiperOptions = {
   },
   centeredSlides: false,
 };
-
-const servicesList = [
-  {
-    icon: "spa",
-    title: "Spa area",
-    text: "Restore body and mind in our Spa Area. Enjoy saunas, hydrotherapy, and ultimate post-yoga relaxation.",
-  },
-  {
-    icon: "room",
-    title: "Changing Room",
-    text: "Enjoy our clean, spacious changing rooms with secure lockers, fresh showers, and full amenities.",
-  },
-  {
-    icon: "lessons",
-    title: "Free Lessons",
-    text: "Try our free yoga lessons to master basic postures, boost energy, and find your daily balance.",
-  },
-  {
-    icon: "rug",
-    title: "Free Rug",
-    text: "Enjoy free yoga rug rental for every class to keep your practice comfortable, clean, and steady.",
-  },
-  {
-    icon: "room",
-    title: "Free Parking",
-    text: "Park your vehicle safely in our private lot with free, convenient, and easy access for guests.",
-  },
-  {
-    icon: "spa",
-    title: "Personal Trainer",
-    text: "Achieve your fitness goals faster with personalized guidance from our certified yoga instructors.",
-  },
-];
 </script>
 
 <template>
@@ -94,7 +63,7 @@ const servicesList = [
           class="services__swiper"
         >
           <div
-            v-for="(service, index) in servicesList"
+            v-for="(service, index) in servicesItem"
             :key="index"
             class="swiper-slide services__slide"
           >
@@ -118,6 +87,7 @@ const servicesList = [
                 <AppButton
                   class="card__btn"
                   :aria-label="service.title"
+                  :to="service.href"
                 >
                   Learn More
                 </AppButton>

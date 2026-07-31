@@ -305,7 +305,6 @@ const swiperOptions = {
     }
   }
   &__hidden {
-    visibility: hidden;
     position: absolute;
     width: 1px;
     height: 1px;

@@ -1,3 +1,4 @@
+<!-- app\components\home\HomeServices.vue -->
 <script setup>
 import AppSwiper from "@/components/modules/swiper/AppSlider.vue";
 import AppButton from "@/components/ui/AppButton.vue";
@@ -90,6 +91,7 @@ const swiperOptions = {
                   :to="service.href"
                 >
                   Learn More
+                  <span class="card__hidden">{{ service.title }}</span>
                 </AppButton>
               </div>
             </Animated>
@@ -301,6 +303,18 @@ const swiperOptions = {
       height: 80px;
       color: $colorAccent;
     }
+  }
+  &__hidden {
+    visibility: hidden;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
   }
 }
 

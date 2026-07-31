@@ -2,6 +2,7 @@
 <script setup lang="ts">
 defineProps<{
   to?: string | object
+  ariaLabel?: string
   type?: 'button' | 'submit' | 'reset'
 }>()
 </script>
@@ -11,6 +12,7 @@ defineProps<{
   <NuxtLink
     v-if="to"
     :to="to"
+    :aria-label="ariaLabel"
     class="ui-btn"
   >
     <slot>Button</slot>
@@ -19,6 +21,7 @@ defineProps<{
   <button
     v-else
     :type="type || 'button'"
+    :aria-label="ariaLabel"
     class="ui-btn"
   >
     <slot>Button</slot>
